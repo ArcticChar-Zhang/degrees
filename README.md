@@ -11,7 +11,8 @@
 * Changelog
 # Introduction
 ### A Python library for degree calculations and conversions.
-> ### 🟩 **Added in version 0.2:** Supported `pickle`.
+> [!TIP]
+> ### **Added in version 0.2:** Supported `pickle`.
 # Installing
 | Python version | Windows                                      | macOS / Linux                       |
 |----------------|----------------------------------------------|-------------------------------------|
@@ -59,12 +60,15 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
     | `+a`            | `Degree`       | /              | `Degree`    |
     | `-a`            | `Degree`       | /              | `Degree`    |
     | `hash(a)`       | `Degree`       | /              | `int`       |
-    > 🟩 **Added in version 0.1.7:** Implemented the `math.trunc` function on the Degree objects.
+    > [!TIP]
+    > **Added in version 0.1.7:** Implemented the `math.trunc` function on the Degree objects.
     
-    > 🟩 **Added in version 0.4.0:** Now `deg_obj * float_obj` is supported. In the previous version, only
+    > [!TIP]
+    > **Added in version 0.4.0:** Now `deg_obj * float_obj` is supported. In the previous version, only
 `deg_obj * int_obj` is supported.
     
-    > 🟥 **Deprecated since version 0.4.0, will be removed in version 0.5.0:** `Degree_obj * Degree_obj` is deprecated
+    > [!CAUTION]
+    > **Deprecated since version 0.4.0, will be removed in version 0.5.0:** `Degree_obj * Degree_obj` is deprecated
 because it is useless and strange.
 
   - ### conversions:
@@ -73,6 +77,7 @@ because it is useless and strange.
     
     In the table above, `type(a)` is `Degree`.
 
+    [!NOTE]
     > The `complex(degree_obj)` is different from `degree_obj.to_complex(length)`. The former returns
     `int(degree_obj)+0j`, but the latter returns `complex(length * cos(theta), length * sin(theta))`,
     `theta=degree2radian(degree_obj)`.
@@ -101,7 +106,8 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      Return a degree object from a string. The **dms** characters should be **`°`, `'` and `"`**.
   - ### _staticmethod_ from_unicode(string)
      Similar to `from_str`, but the **dms** characters should be **`°`, `′` and `″`**.
-     > 🟩 **Added in version 0.1.10.**
+     > [!TIP]
+     > **Added in version 0.1.10.**
   - ### _staticmethod_ from_iter(iterable)
      Return a degree object from an iterable.
   - ### total_seconds
@@ -116,11 +122,12 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      The sign of a degree object.
   - ### to_complex(length: int | float)
      Returns the complex number corresponding to `(angle=self, radius=length)`.
-     > 🟩 **Added in version 0.2.1.**
+     > [!TIP]
+     > **Added in version 0.2.1.**
   - ### _property_ dms
      A tuple of `(degree, minute, second)`.
    
-   > ### Note
+   > [!NOTE]
    > The attributes of Degree are read-only.
 # Functions
 ## _degrees_.degree2radian(x: Degree, /)
