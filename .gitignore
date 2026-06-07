@@ -70,4 +70,4 @@ media/
 *.dll
 *.bin
 
-README-PyPI.md
+/README-PyPI.md
