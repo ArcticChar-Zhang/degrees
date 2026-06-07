@@ -1,4 +1,4 @@
-# degrees V0.4.1a1
+# degrees V0.4.1b1
 # Contents
 * Introduction
 * Importing
@@ -142,5 +142,6 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 # Changelog
    1. Changed `deg`, `min`, `sec` and `sign` to `property`.
    2. Added `__author__`.
+   3. Uploaded to `GitHub`.
 > ### Write in the end
 > If you found the bug in the code, you can email me at `snake830@vip.163.com`. I am happy to receive the advice!
