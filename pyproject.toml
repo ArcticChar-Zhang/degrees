@@ -9,7 +9,7 @@ authors = [
     { name="ArcticChar", email="snake830@vip.163.com" }
 ]
 description = "A python library for degree calculations and conversions."
-readme = "README.md"
+readme = "README-PyPI.md"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
