@@ -1,14 +1,17 @@
 # degrees V0.4.1b1
 # Contents
-* Introduction
-* Importing
-* Class
-  * Degree
-* Functions
-  * degree2radian
-  * radian2degree
-  * normalize
-* Changelog
+* [Introduction](#introduction)
+* [Importing](#importing)
+* [Class](#class)
+  * [Degree](#class-degreesdegreenumberclass-degreesdegreedegree_objclass-degreesdegreedegree0-minute0-second0)
+* [Functions](#functions)
+  * [degree2radian](#degreesdegree2radianx-degree-)
+  * [radian2degree](#degreesradian2degreex-int--float-)
+  * [normalize](#degreesnormalizex-degree-)
+* [Consts](#consts)
+  * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
+  * [__author__](#__author__)
+* [Changelog](#changelog)
 # Introduction
 ### A Python library for degree calculations and conversions.
 > [!TIP]
