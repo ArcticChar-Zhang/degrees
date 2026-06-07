@@ -106,6 +106,7 @@ class Degree:
         ..."""
 
     def __repr__(self) -> str:
+        """return the repr form of the degree object"""
         return "Degree" + str(self.dms)
 
     def __pos__(self) -> Self:

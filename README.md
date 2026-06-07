@@ -1,4 +1,4 @@
-# degrees V0.4.1a0
+# degrees V0.4.1a1
 # Contents
 * Introduction
 * Importing
@@ -10,10 +10,10 @@
   * normalize
 * Changelog
 # Introduction
-### A python library for degree calculations and conversions.
+### A Python library for degree calculations and conversions.
 > ### 🟩 **Added in version 0.2:** Supported `pickle`.
 # Installing
-| Python version | Windows                                      | MacOS / Linux                       |
+| Python version | Windows                                      | macOS / Linux                       |
 |----------------|----------------------------------------------|-------------------------------------|
 | `3.8` or `3.9` | `python -m pip install degrees==0.3.0.post1` | `pip3 install degrees==0.3.0.post1` |
 | `3.10+`        | `python -m pip install degrees`              | `pip3 install degrees`              |
@@ -128,7 +128,7 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ## _degrees_.radian2degree(x: int | float, /)
    - Convert angle x from radians to a degree object.
 ## _degrees_.normalize(x: Degree, /)
-   - Be using for angle normalization.
+   - Used for angle normalization.
 # Version
 ## version_info
    - The version of this package, like

@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "degrees"
-version = "0.4.1a0"
+version = "0.4.1a1"
 authors = [
     { name="ArcticChar", email="snake830@vip.163.com" }
 ]
 description = "A python library for degree calculations and conversions."
-readme = "readme.md"
+readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",

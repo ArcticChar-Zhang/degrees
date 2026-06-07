@@ -6,7 +6,7 @@ __all__: list[str] = ['version_info']
 _Releaselevel = _Literal['alpha', 'beta', 'candidate', 'final', 'post']
 
 # noinspection PyPep8Naming
-class version_info(_NamedTuple):
+class version_info(_NamedTuple):  # type: ignore
     """The version info of the degree package."""
     major: int
     minor: int
@@ -17,4 +17,4 @@ class version_info(_NamedTuple):
     def __repr__(self):
         return f'version_info({self.major}, {self.minor}, {self.micro}, {self.releaselevel!r}, {self.serial})'
 
-version_info = version_info(0, 4, 0)
+version_info: _NamedTuple = version_info(0, 4, 1, 'alpha', 1)  # type: ignore

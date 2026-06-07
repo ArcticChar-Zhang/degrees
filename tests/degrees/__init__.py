@@ -18,3 +18,5 @@ __all__: list[str] = [
     'MINUTE',
     'SECOND'
 ]
+
+__author__ = 'Zhang Jiarui'
