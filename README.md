@@ -22,7 +22,7 @@ If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/p
 # Importing
 ### Just type `import degrees`.
 # Class
-- ## _class_ degrees.Degree(number)<br>_class_ degrees.Degree(degree_obj)<br>_class_ degrees.Degree(degree=0, minute=0, second=0)
+- ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
   - ### Creating a Degree object
 
 ```python 
@@ -38,7 +38,7 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
 ```
 
   - ### calculating:
-    | comprehensions  | `type(a)`      | `type(b)`      | return type |
+    | expressions     | `type(a)`      | `type(b)`      | return type |
     |-----------------|----------------|----------------|-------------|
     | `a + b`         | `Degree`       | `int \| float` | `Degree`    |
     |                 | `int \| float` | `Degree`       | `Degree`    |
@@ -86,14 +86,14 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ```
 
   - ### comparisons:
-    | comprehensions | `type(a)` | `type(b)`                |
-    |----------------|-----------|--------------------------|
-    | `a >= b`       | `Degree`  | `Degree \| int \| float` |
-    | `a > b`        | `Degree`  | `Degree \| int \| float` |
-    | `a == b`       | `Degree`  | `Any`                    |
-    | `a <= b`       | `Degree`  | `Degree \| int \| float` |
-    | `a < b`        | `Degree`  | `Degree \| int \| float` |
-    | `a != b`       | `Degree`  | `Any`                    |
+    | expressions | `type(a)` | `type(b)`                |
+    |-------------|-----------|--------------------------|
+    | `a >= b`    | `Degree`  | `Degree \| int \| float` |
+    | `a > b`     | `Degree`  | `Degree \| int \| float` |
+    | `a == b`    | `Degree`  | `Any`                    |
+    | `a <= b`    | `Degree`  | `Degree \| int \| float` |
+    | `a < b`     | `Degree`  | `Degree \| int \| float` |
+    | `a != b`    | `Degree`  | `Any`                    |
     
     In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
 
@@ -104,15 +104,15 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      > 🟩 **Added in version 0.1.10.**
   - ### _staticmethod_ from_iter(iterable)
      Return a degree object from an iterable.
-  - ### _property_ total_seconds
+  - ### total_seconds
      The total seconds of a degree object.
-  - ### deg
+  - ### _property_ deg
      The degree of a degree object(without sign).
-  - ### min
+  - ### _property_ min
      The minute of a degree object(without sign).
-  - ### sec
+  - ### _property_ sec
      The second of a degree object(without sign).
-  - ### sign
+  - ### _property_ sign
      The sign of a degree object.
   - ### to_complex(length: int | float)
      Returns the complex number corresponding to `(angle=self, radius=length)`.
@@ -123,11 +123,11 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    > ### Note
    > The attributes of Degree are read-only.
 # Functions
-## _def_ degree2radian(x: Degree, /)
+## _degrees_.degree2radian(x: Degree, /)
    - Convert angle x from a degree object to radians.
-## _def_ radian2degree(x: int | float, /)
+## _degrees_.radian2degree(x: int | float, /)
    - Convert angle x from radians to a degree object.
-## _def_ normalize(x: Degree, /)
+## _degrees_.normalize(x: Degree, /)
    - Be using for angle normalization.
 # Version
 ## version_info
@@ -137,9 +137,10 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 # Consts
 ## DEGREE<br>MINUTE<br>SECOND
    Equals to `°`, `′` and `″`.
+## \_\_author\_\_
+   The author of this package.
 # Changelog
-   1. Supported `Degree_obj * float_obj`.
-   2. Optimized `from_str` and `from_unicode`.
-   3. Raised DeprecatedWarning when using `Degree_obj * Degree_obj`.
+   1. Changed `deg`, `min`, `sec` and `sign` to `property`.
+   2. Added `__author__`.
 > ### Write in the end
 > If you found the bug in the code, you can email me at `snake830@vip.163.com`. I am happy to receive the advice!
