@@ -1,4 +1,5 @@
-# degrees V0.4.1b1
+# degrees V0.4.1
+# Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
 * [Importing](#importing)
@@ -10,7 +11,7 @@
   * [normalize](#degreesnormalizex-degree-)
 * [Consts](#consts)
   * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
-  * [__author__](#__author__)
+  * [\_\_author\_\_](#__author__)
 * [Changelog](#changelog)
 # Introduction
 ### A Python library for degree calculations and conversions.
