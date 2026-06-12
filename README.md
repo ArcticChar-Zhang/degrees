@@ -17,6 +17,12 @@
 ### A Python library for degree calculations and conversions.
 > [!TIP]
 > ### **Added in version 0.2:** Supported `pickle`.
+
+> [!WARNING]
+> ### Changed the attributes of degree in version 0.4.1. You need to be careful if you use pickle.
+
+> [!NOTE]
+> ### If you want to see the code of this module, please look at the code in `src` folder; the `tests` folder is for developing, if you want to see the progress of developing or help me develop, please look at the code in `src` folder.
 # Installing
 | Python version | Windows                                      | macOS / Linux                       |
 |----------------|----------------------------------------------|-------------------------------------|
