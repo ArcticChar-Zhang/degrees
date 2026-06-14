@@ -13,7 +13,7 @@
   * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
   * [\_\_author\_\_](#__author__)
 * [Changelog](#changelog)
-* [Older versions]
+* [Older versions](#older-versions)
 # Introduction
 ### A Python library for degree calculations and conversions.
 > [!TIP]
@@ -36,7 +36,9 @@ If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/p
 # Class
 - ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
   - ### Creating a Degree object
-
+   > [!WARNING]
+   > **Changed in version 0.4.0:** The arguments' names are changed since version 0.4.2. Please be careful if you
+   > use keyword arguments. Now the arguments are: `degree`, `minute`, `second`. It does not depend on the overloads.
 ```python 
 import degrees
 
