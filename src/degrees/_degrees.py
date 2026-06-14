@@ -45,12 +45,12 @@ class Degree:
             self.total_seconds = second
             return
         if isinstance(degree, float):
-            if (second != 0 and not isinstance(second, int)) or (minute != 0 and not isinstance(minute, int)):  # type: ignore
+            if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise TypeError("if the type of degree is float, second and minute must be 0")
             self.total_seconds = int(degree * 3600)
             return
         if isinstance(degree, Degree):
-            if (second != 0 and not isinstance(second, int)) or (minute != 0 and not isinstance(minute, int)):  # type: ignore
+            if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if the type of degree is Degree, minute and second must be 0")
             self.total_seconds = degree.total_seconds
             return

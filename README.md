@@ -1,4 +1,4 @@
-# degrees V0.4.2b1
+# degrees V0.4.2
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -158,9 +158,8 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ## \_\_author\_\_
    The author of this package.
 # Changelog
-   1. Changed `deg`, `min`, `sec` and `sign` to `property`.
-   2. Added `__author__`.
-   3. Uploaded to `GitHub`.
+   1. Enhanced support for VS Code.
+   2. Added block `Older versions`.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1)<br>
