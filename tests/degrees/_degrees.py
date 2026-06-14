@@ -1,13 +1,13 @@
 """A python library for degree calculations and conversions."""
-import sys
+import sys as _sys  # type: ignore
 from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,
                   sin as _sin)
-from sys import version_info as _version_info
 from collections.abc import Iterable, Callable
 from inspect import currentframe as _currentframe
 from warnings import warn as _warn
+from typing import Any, SupportsIndex, overload
 
 __all__: list[str] = [
     "Degree",
@@ -23,62 +23,51 @@ DEGREE = '\u00b0'
 MINUTE = '\u2032'
 SECOND = '\u2033'
 
-if _version_info >= (3, 11):
-    from typing import Any, overload, Self
-else:
-    from typing import Any, overload, TypeVar  # pragma: no cover
-    Self = TypeVar("Self", bound="Degree")  # pragma: no cover
-
-
-class _Type:
-    num_or_deg = int | float | Self
-    builtin_real_number = int | float
-
 class Degree:
     __slots__ = ('total_seconds', '_s', '_d', '_m', '_si')
 
     @overload
     def __init__(self, degree: int = 0, minute: int = 0, second: int = 0) -> None: ...
     @overload
-    def __init__(self, number: float) -> None: ...
+    def __init__(self, degree: float) -> None: ...
     @overload
-    def __init__(self, degree_obj: Self) -> None: ...
-    def __init__(self, degree: _Type.num_or_deg = 0,
+    def __init__(self, degree: 'Degree') -> None: ...
+    def __init__(self, degree: int | float | 'Degree' = 0,
                  minute: int = 0,
                  second: int = 0) -> None:
         """Create a degree object"""
         self.total_seconds: int
-        if not isinstance(degree, (int, float, Degree)):
+        if not isinstance(degree, (int, float, Degree)):  # type: ignore
             raise TypeError("invalid type")
         if degree == 0 and minute == 0:
-            if not isinstance(second, int) or not isinstance(minute, int):
+            if not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise TypeError("invalid type")
             self.total_seconds = second
             return
         if isinstance(degree, float):
-            if second != 0 or minute != 0 or not isinstance(second, int) or not isinstance(minute, int):
+            if (second != 0 and not isinstance(second, int)) or (minute != 0 and not isinstance(minute, int)):  # type: ignore
                 raise TypeError("if the type of degree is float, second and minute must be 0")
             self.total_seconds = int(degree * 3600)
             return
         if isinstance(degree, Degree):
-            if minute != 0 or second != 0 or not isinstance(second, int) or not isinstance(minute, int):
+            if (second != 0 and not isinstance(second, int)) or (minute != 0 and not isinstance(minute, int)):  # type: ignore
                 raise ValueError("if the type of degree is Degree, minute and second must be 0")
             self.total_seconds = degree.total_seconds
             return
-        if isinstance(degree, int):
-            if (degree != 0 and (minute < 0 or second < 0)) or not isinstance(second, int) or not\
-                    isinstance(minute, int):
-                raise ValueError("if degree is not 0, minute and second must be positive integer")
+        if isinstance(degree, int):  # type: ignore
+            if (degree != 0 and (minute < 0 or second < 0)) or\
+                not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
+                raise ValueError("if degree is not 0, minute and second must be positive integer")  # type: ignore
             self.total_seconds = abs(degree) * 3600 + abs(minute) * 60 + abs(second)
             if degree < 0 or minute < 0 or second < 0:
                 self.total_seconds = -self.total_seconds
             if minute != 0 and second < 0:
                 raise ValueError("if degree is 0, but minute is not, second must be positive integer")
 
-        if not isinstance(self.total_seconds, int):
+        if not isinstance(self.total_seconds, int):  # type: ignore
             raise TypeError("unknown type")  # pragma: no cover
 
-    def __abs__(self) -> Self:
+    def __abs__(self) -> 'Degree':
         """Return the absolute value of the degree object"""
         return Degree(second=self.total_seconds)
 
@@ -109,11 +98,11 @@ class Degree:
         """return the repr form of the degree object"""
         return "Degree" + str(self.dms)
 
-    def __pos__(self) -> Self:
+    def __pos__(self) -> 'Degree':
         """Return self unchanged"""
         return self
 
-    def __neg__(self) -> Self:
+    def __neg__(self) -> 'Degree':
         """Return self negated"""
         return Degree(second=-self.total_seconds)
 
@@ -158,25 +147,25 @@ class Degree:
             return self.total_seconds == other.total_seconds
         return float(self) == other
 
-    def __gt__(self, other: _Type.num_or_deg) -> bool:
+    def __gt__(self, other: int | float | 'Degree') -> bool:
         """Return self is strictly greater than other"""
         if isinstance(other, Degree):
             return self.total_seconds > other.total_seconds
         if isinstance(other, int):
             return self.total_seconds > other * 3600
-        if isinstance(other, float):
+        if isinstance(other, float):  # type: ignore
             return float(self) > other
         raise TypeError("invalid type")
 
-    def __lt__(self, other: _Type.num_or_deg) -> bool:
+    def __lt__(self, other: int | float | 'Degree') -> bool:
         """Return self is strictly less than other"""
         return not self >= other
 
-    def __ge__(self, other: _Type.num_or_deg) -> bool:
+    def __ge__(self, other: int | float | 'Degree') -> bool:
         """Return self is greater than or equal to other"""
         return self > other or self == other
 
-    def __le__(self, other: _Type.num_or_deg) -> bool:
+    def __le__(self, other: int | float | 'Degree') -> bool:
         """Return self is less than or equal to other"""
         return not self > other
 
@@ -184,25 +173,25 @@ class Degree:
         """Return self is not equal to other"""
         return not self == other
 
-    def __add__(self, other: _Type.num_or_deg) -> Self:
+    def __add__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the sum of self and other"""
         oth: Degree = Degree(other)
         ttsec: int = self.total_seconds + oth.total_seconds
         return Degree(second=ttsec)
 
-    def __radd__(self, other: _Type.num_or_deg) -> Self:
+    def __radd__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the sum of other and self"""
         return self + other
 
-    def __sub__(self, other: _Type.num_or_deg) -> Self:
+    def __sub__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the difference of self and other"""
         return self + -other
 
-    def __rsub__(self, other: _Type.num_or_deg) -> Self:
+    def __rsub__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the difference of other and self"""
         return -(self.__sub__(other))
 
-    def __mul__(self, other: _Type.num_or_deg) -> Self:
+    def __mul__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the product of self and other"""
         if isinstance(other, Degree):
             _warn('"Degree_obj" * "Degree_obj" is deprecated since version 0.4.0, will be removed in version 0.5'
@@ -212,35 +201,35 @@ class Degree:
             resrad = srad * orad
             resdeg = _degrees(resrad)
             return Degree(resdeg)
-        if isinstance(other, (int, float)):
+        if isinstance(other, (int, float)):  # type: ignore
             tts = int(self.total_seconds * other)
             return Degree(second=tts)
         raise Exception("invalid type")
 
-    def __rmul__(self, other: _Type.num_or_deg) -> Self:
+    def __rmul__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the product of other and self"""
         return self * other
 
     @overload
-    def __truediv__(self, other: Self) -> float: ...
+    def __truediv__(self, other: 'Degree') -> float: ...
     @overload
-    def __truediv__(self, other: _Type.builtin_real_number) -> Self: ...
-    def __truediv__(self, other: _Type.num_or_deg) -> Self | float:
+    def __truediv__(self, other: int | float) -> 'Degree': ...
+    def __truediv__(self, other: int | float | 'Degree') -> 'Degree | float':
         """Return the quotient of self and other"""
         if other == 0:
             raise ZeroDivisionError("division by zero")
         if isinstance(other, (int, float)):
             tts = self.total_seconds // other
-            return Degree(second=tts)
+            return Degree(second=tts)  # type: ignore
         sts = self.total_seconds
         ots = other.total_seconds
         return sts / ots
 
     @overload
-    def __floordiv__(self, other: Self) -> float: ...
+    def __floordiv__(self, other: 'Degree') -> int: ...
     @overload
-    def __floordiv__(self, other: _Type.builtin_real_number) -> Self: ...
-    def __floordiv__(self, other: _Type.num_or_deg) -> Self | int:
+    def __floordiv__(self, other: int | float) -> 'Degree': ...
+    def __floordiv__(self, other: int | float | 'Degree') -> 'Degree | int':
         """Return the floored quotient of self and other"""
         if other == 0:
             raise ZeroDivisionError("division by zero")
@@ -251,7 +240,7 @@ class Degree:
         ots = other.total_seconds
         return sts // ots
 
-    def __mod__(self, other: Self) -> Self:
+    def __mod__(self, other: 'Degree') -> 'Degree':
         """Return the remainder of 'self / other'"""
         if other == Degree(0):
             raise ZeroDivisionError("modulo by zero")
@@ -264,17 +253,17 @@ class Degree:
         """Return the hash value of the degree object"""
         return hash((self.deg, self.min, self.sec, self.sign))
 
-    def __setattr__(self, key, value) -> None:
+    def __setattr__(self, key: str, value: Any) -> None:
         frame = _currentframe()
         if frame is None:
             del frame  # pragma: no cover
-            import sys as _sys  # pragma: no cover
             if not hasattr(_sys, '_getframe'):  # pragma: no cover
                 raise AttributeError("read-only attribute")  # pragma: no cover
-            frame = sys._getframe()  # pragma: no cover
-        if frame.f_back.f_code.co_filename != __file__:
-            del frame
-            raise AttributeError("read-only attribute")
+            frame = _sys._getframe()  # type: ignore # pragma: no cover
+        if (__f := frame.f_back) is not None:
+            if __f.f_code.co_filename != __file__:
+                del frame
+                raise AttributeError("read-only attribute")
         del frame
         super().__setattr__(key, value)
 
@@ -286,7 +275,7 @@ class Degree:
         object.__setattr__(obj, 'total_seconds', tts)
         return obj
 
-    def __reduce_ex__(self, protocol: int) -> \
+    def __reduce_ex__(self, protocol: SupportsIndex) -> \
             tuple[Callable[[int], object], tuple[int]]:
         return (
             self._construct,
@@ -329,7 +318,7 @@ class Degree:
         return getattr(self, '_si')
 
     @staticmethod
-    def from_str(string: str) -> Self:
+    def from_str(string: str) -> 'Degree':
         """Create a degree from a string"""
         if string.isdecimal():
             return Degree(int(string))
@@ -371,7 +360,7 @@ class Degree:
         return Degree(deg, min_, sec)
 
     @staticmethod
-    def from_unicode(string: str) -> Self:
+    def from_unicode(string: str) -> 'Degree':
         """Create a degree from a string"""
         if string.isdecimal():
             return Degree(int(string))
@@ -413,7 +402,7 @@ class Degree:
         return Degree(deg, min_, sec)
 
     @staticmethod
-    def from_iter(iterable: Iterable[int]) -> Self:
+    def from_iter(iterable: Iterable[int]) -> 'Degree':
         """Return a degree object from an iterable
         Accept forms:
         1) (deg, min, sec)
@@ -428,7 +417,7 @@ class Degree:
             return Degree(*iter_)
         elif len(iter_) == 4:
             if (iter_[0] != 0 or iter_[1] != 0 or iter_[2] != 0) and iter_[3] == 0:
-                raise ValueError("Incorrect iter format.You can see the doc:\n" + Degree.from_iter.__doc__)
+                raise ValueError("Incorrect iter format.You can see the doc:\n" + str(Degree.from_iter.__doc__))
             _ = 1 if (iter_[3] > 0) else -1
             return Degree(*iter_[:3]) * _
         raise ValueError("Incorrect iter format")
@@ -445,7 +434,7 @@ class Degree:
                 s = -s
         return d, m, s
 
-    def to_complex(self, length: _Type.builtin_real_number) -> complex:
+    def to_complex(self, length: int | float) -> complex:
         if length < 0:
             raise ValueError("length must be non-negative")
         theta = degree2radian(self)
@@ -458,7 +447,7 @@ def degree2radian(x: Degree, /) -> float:
     """Convert angle x from a degree object to radians"""
     return _radians(x.total_seconds / 3600)
 
-def radian2degree(x: _Type.builtin_real_number, /) -> Degree:
+def radian2degree(x: int | float, /) -> Degree:
     """Convert angle x from radians to a degree object"""
     return Degree(_degrees(x))
 
@@ -468,6 +457,4 @@ def normalize(x: Degree, /) -> Degree:
     norms = tts % 1_296_000
     return Degree(second=norms)
 
-del Any, overload, Self, Iterable, _Type
-if _version_info < (3, 11):
-    del TypeVar  # pragma: no cover
+del Any, overload, Iterable

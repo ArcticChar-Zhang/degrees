@@ -17,4 +17,4 @@ class version_info(_NamedTuple):  # type: ignore
     def __repr__(self):
         return f'version_info({self.major}, {self.minor}, {self.micro}, {self.releaselevel!r}, {self.serial})'
 
-version_info: _NamedTuple = version_info(0, 4, 1)  # type: ignore
+version_info: _NamedTuple = version_info(0, 4, 2, 'beta', 1)  # type: ignore

@@ -1,4 +1,4 @@
-# degrees V0.4.1
+# degrees V0.4.2b1
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -13,6 +13,7 @@
   * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
   * [\_\_author\_\_](#__author__)
 * [Changelog](#changelog)
+* [Older versions]
 # Introduction
 ### A Python library for degree calculations and conversions.
 > [!TIP]
@@ -160,5 +161,10 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    1. Changed `deg`, `min`, `sec` and `sign` to `property`.
    2. Added `__author__`.
    3. Uploaded to `GitHub`.
+# Older versions
+> Looking for src and a README older version?<br>
+> Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1)<br>
+> And [here](https://pypi.org/project/degrees/#history) for versions below V0.4.1b1.
+
 > ### Write in the end
 > If you found the bug in the code, you can email me at `snake830@vip.163.com`. I am happy to receive the advice!
