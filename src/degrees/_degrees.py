@@ -217,7 +217,7 @@ class Degree:
         if other == 0:
             raise ZeroDivisionError("division by zero")
         if isinstance(other, (int, float)):
-            tts = self.total_seconds // other
+            tts = int(self.total_seconds // other)
             return Degree(second=tts)  # type: ignore
         sts = self.total_seconds
         ots = other.total_seconds
@@ -232,7 +232,7 @@ class Degree:
         if other == 0:
             raise ZeroDivisionError("division by zero")
         if isinstance(other, (int, float)):
-            res = self.deg * self.sign // other
+            res = int(self.deg * self.sign // other)
             return Degree(res)
         sts = self.total_seconds
         ots = other.total_seconds

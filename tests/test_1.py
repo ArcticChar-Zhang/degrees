@@ -149,6 +149,8 @@ class TestProject(unittest.TestCase):
         self.assertEqual(d3 // d2, 2)
         self.assertEqual(d3 // d4, 1)
         self.assertEqual(d3 % d2, 0)
+        self.assertEqual(d1 / 1.5, 0)
+        self.assertEqual(d1 // 1.5, 0)
         print(9)
 
     def test_hash(self):
