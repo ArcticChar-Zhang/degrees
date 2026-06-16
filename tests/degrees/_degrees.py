@@ -5,9 +5,8 @@ from math import (radians as _radians,
                   cos as _cos,
                   sin as _sin)
 from collections.abc import Iterable, Callable
-from inspect import currentframe as _currentframe
 from warnings import warn as _warn
-from typing import Any, SupportsIndex, overload
+from typing import Any, SupportsIndex, overload, Never
 
 __all__: list[str] = [
     "Degree",
@@ -253,19 +252,8 @@ class Degree:
         """Return the hash value of the degree object"""
         return hash((self.deg, self.min, self.sec, self.sign))
 
-    def __setattr__(self, key: str, value: Any) -> None:
-        frame = _currentframe()
-        if frame is None:
-            del frame  # pragma: no cover
-            if not hasattr(_sys, '_getframe'):  # pragma: no cover
-                raise AttributeError("read-only attribute")  # pragma: no cover
-            frame = _sys._getframe()  # type: ignore # pragma: no cover
-        if (__f := frame.f_back) is not None:
-            if __f.f_code.co_filename != __file__:
-                del frame
-                raise AttributeError("read-only attribute")
-        del frame
-        super().__setattr__(key, value)
+    def __setattr__(self, key: str, value: Any) -> Never:
+        raise AttributeError('read-only attribute')
 
     __trunc__ = __int__
 
@@ -275,8 +263,7 @@ class Degree:
         object.__setattr__(obj, 'total_seconds', tts)
         return obj
 
-    def __reduce_ex__(self, protocol: SupportsIndex) -> \
-            tuple[Callable[[int], object], tuple[int]]:
+    def __reduce_ex__(self, _: SupportsIndex) -> tuple[Callable[[int], object], tuple[int]]:  # type: ignore
         return (
             self._construct,
             (self.total_seconds,)
@@ -286,21 +273,21 @@ class Degree:
     def deg(self) -> int:
         """Return the total number of seconds"""
         if not hasattr(self, '_d'):
-            setattr(self, '_d', abs(self.total_seconds) // 3600)
+            object.__setattr__(self, '_d', abs(self.total_seconds) // 3600)
         return getattr(self, '_d')
 
     @property
     def min(self) -> int:
         """Return the total number of seconds"""
         if not hasattr(self, '_m'):
-            setattr(self, '_m', abs(self.total_seconds) % 3600 // 60)
+            object.__setattr__(self, '_m', abs(self.total_seconds) % 3600 // 60)
         return getattr(self, '_m')
 
     @property
     def sec(self) -> int:
         """Return the total number of seconds"""
         if not hasattr(self, '_s'):
-            setattr(self, '_s', abs(self.total_seconds) % 60)
+            object.__setattr__(self, '_s', abs(self.total_seconds) % 60)
         return getattr(self, '_s')
 
     @property
@@ -314,7 +301,7 @@ class Degree:
                 a = -1
             else:
                 a = 0
-            setattr(self, '_si', a)
+            object.__setattr__(self, '_si', a)
         return getattr(self, '_si')
 
     @staticmethod
@@ -361,7 +348,7 @@ class Degree:
 
     @staticmethod
     def from_unicode(string: str) -> 'Degree':
-        """Create a degree from a string"""
+        """Create a degree from a Unicode string"""
         if string.isdecimal():
             return Degree(int(string))
         charset = ''
@@ -424,6 +411,7 @@ class Degree:
 
     @property
     def dms(self) -> tuple[int, int, int]:
+        """Return tuple(self.deg, self.min, self.sec) with sign(+-)"""
         d, m, s = self.deg, self.min, self.sec
         if self.sign == -1:
             if d > 0:
@@ -435,6 +423,7 @@ class Degree:
         return d, m, s
 
     def to_complex(self, length: int | float) -> complex:
+        """Return the complex form of the degree object with modulus length and argument self"""
         if length < 0:
             raise ValueError("length must be non-negative")
         theta = degree2radian(self)
@@ -457,4 +446,4 @@ def normalize(x: Degree, /) -> Degree:
     norms = tts % 1_296_000
     return Degree(second=norms)
 
-del Any, overload, Iterable
+del Any, overload, Iterable, Never
