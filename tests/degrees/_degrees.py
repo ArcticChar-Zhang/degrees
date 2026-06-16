@@ -2,7 +2,8 @@
 from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,
-                  sin as _sin)
+                  sin as _sin,
+                  gcd as _gcd)
 from collections.abc import Iterable, Callable
 from warnings import warn as _warn
 from typing import Any, SupportsIndex, overload, Never
@@ -435,6 +436,18 @@ class Degree:
             r * _cos(theta),
             r * _sin(theta)
         )
+
+    def as_integer_ratio(self) -> tuple[int, int]:
+        """Return the degree object as a ratio of two integers"""
+        tts = self.total_seconds
+        if tts == 0:
+            return 0, 1
+        gcd = _gcd(tts, 3600)
+        return tts // gcd, 3600 // gcd
+    
+    def is_integer(self) -> bool:
+        """Return True if the degree object is an integer, else False"""
+        return self.min == 0 and self.sec == 0
 
 def degree2radian(x: Degree, /) -> float:
     """Convert angle x from a degree object to radians"""

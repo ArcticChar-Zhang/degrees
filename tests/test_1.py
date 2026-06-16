@@ -247,3 +247,10 @@ class TestProject(unittest.TestCase):
         with self.assertRaises(ValueError):
             d.to_complex(-1)
         print(19)
+    
+    def test_duck_types(self):
+        d1 = degrees.Degree(1, 2, 3)
+        self.assertEqual(d1.as_integer_ratio(), (1241, 1200))
+        self.assertEqual(degrees.Degree().as_integer_ratio(), (0, 1))
+        self.assertFalse(d1.is_integer())
+        print(20)

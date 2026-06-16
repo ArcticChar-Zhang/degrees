@@ -37,7 +37,7 @@ If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/p
 ### Just type `import degrees`.
 # Class
 - ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
-  - ### Creating a Degree object
+   - ### Creating a Degree object
    > [!WARNING]
    > **Changed in version 0.4.0:** The arguments' names are changed since version 0.4.2. Please be careful if you
    > use keyword arguments. Now the arguments are: `degree`, `minute`, `second`. It does not depend on the overloads.
@@ -53,7 +53,7 @@ print(degrees.Degree(1.5))  # 1°30'
 print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and second must be positive integer
 ```
 
-  - ### calculating:
+   - ### calculating:
     | expressions     | `type(a)`      | `type(b)`      | return type |
     |-----------------|----------------|----------------|-------------|
     | `a + b`         | `Degree`       | `int \| float` | `Degree`    |
@@ -86,7 +86,7 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
    > **Deprecated since version 0.4.0, will be removed in version 0.5.0:** `Degree_obj * Degree_obj` is deprecated
 because it is useless and strange.
 
-  - ### conversions:
+   - ### conversions:
     | `int(a)` | `float(a)` | `str(a)` | `repr(a)` | `bool(a)` | `complex(a)` |
     |----------|------------|----------|-----------|-----------|--------------|
     
@@ -108,7 +108,7 @@ print(complex(a))  # (45+0j)
 print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ```
 
-  - ### comparisons:
+   - ### comparisons:
     | expressions | `type(a)` | `type(b)`                |
     |-------------|-----------|--------------------------|
     | `a >= b`    | `Degree`  | `Degree \| int \| float` |
@@ -120,30 +120,39 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
     
     In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
 
-  - ### _staticmethod_ from_str(string)
+   - ### _property_ deg
+     The degree of a degree object(without sign).
+   - ### _property_ dms
+     A tuple of `(degree, minute, second)`.
+   - ### _property_ min
+     The minute of a degree object(without sign).
+   - ### _property_ sec
+     The second of a degree object(without sign).
+   - ### _property_ sign
+     The sign of a degree object.
+   - ### _property_ total_seconds
+     The total seconds of a degree object.
+   - ### _staticmethod_ from_iter(iterable)
+     Return a degree object from an iterable.
+   - ### _staticmethod_ from_str(string)
      Return a degree object from a string. The **dms** characters should be **`°`, `'` and `"`**.
-  - ### _staticmethod_ from_unicode(string)
+   - ### _staticmethod_ from_unicode(string)
      Similar to `from_str`, but the **dms** characters should be **`°`, `′` and `″`**.
    > [!TIP]
    > **Added in version 0.1.10.**
-  - ### _staticmethod_ from_iter(iterable)
-     Return a degree object from an iterable.
-  - ### total_seconds
-     The total seconds of a degree object.
-  - ### _property_ deg
-     The degree of a degree object(without sign).
-  - ### _property_ min
-     The minute of a degree object(without sign).
-  - ### _property_ sec
-     The second of a degree object(without sign).
-  - ### _property_ sign
-     The sign of a degree object.
-  - ### to_complex(length: int | float)
+   - ### as_integer_ratio()
+     Return a tuple of `(numerator, denominator)` which is the integer ratio of the degree object.
+     For example, `Degree(1, 30).as_integer_ratio()` returns `(3, 2)`.
+   > [!TIP]
+   > **Added in version 0.4.3.**
+   - ### is_integer()
+     Return `True` if the degree object is an integer, else `False`. For example, `Degree(1, 30).is_integer()` returns `False`, but `Degree(1).is_integer()` returns `True`.
+   > [!TIP]
+   > **Added in version 0.4.3.**
+   - ### to_complex(length: int | float)
      Returns the complex number corresponding to `(angle=self, radius=length)`.
    > [!TIP]
    > **Added in version 0.2.1.**
-  - ### _property_ dms
-     A tuple of `(degree, minute, second)`.
    
    > [!NOTE]
    > The attributes of Degree are read-only.
@@ -168,6 +177,7 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    1. Improved the docstrings.
    2. Changed all the arguments to `property`.
    3. Fixed some bugs in the code.
+   4. Added the `is_integer` and `as_integer_ratio` methods to _class `Degree`_.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the version you want, and then click "📄Browse files".<br>
