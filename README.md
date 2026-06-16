@@ -1,7 +1,6 @@
-# degrees V0.4.3a0
+# degrees V0.4.3
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
-* [**0.4.2 Docs**](https://github.com/ArcticChar-Zhang/degrees/tree/916cb229589e56414d246a9d3cb961b1dfaa82a7)
 * [Introduction](#introduction)
 * [Installing](#installing)
 * [Importing](#importing)

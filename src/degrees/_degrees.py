@@ -1,13 +1,12 @@
 """A python library for degree calculations and conversions."""
-import sys as _sys  # type: ignore
 from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,
-                  sin as _sin)
+                  sin as _sin,
+                  gcd as _gcd)
 from collections.abc import Iterable, Callable
-from inspect import currentframe as _currentframe
 from warnings import warn as _warn
-from typing import Any, SupportsIndex, overload
+from typing import Any, SupportsIndex, overload, Never
 
 __all__: list[str] = [
     "Degree",
@@ -24,7 +23,7 @@ MINUTE = '\u2032'
 SECOND = '\u2033'
 
 class Degree:
-    __slots__ = ('total_seconds', '_s', '_d', '_m', '_si')
+    __slots__ = ('_tts', '_s', '_d', '_m', '_si')
 
     @overload
     def __init__(self, degree: int = 0, minute: int = 0, second: int = 0) -> None: ...
@@ -36,31 +35,30 @@ class Degree:
                  minute: int = 0,
                  second: int = 0) -> None:
         """Create a degree object"""
-        self.total_seconds: int
         if not isinstance(degree, (int, float, Degree)):  # type: ignore
             raise TypeError("invalid type")
         if degree == 0 and minute == 0:
             if not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise TypeError("invalid type")
-            self.total_seconds = second
+            object.__setattr__(self, '_tts', second)
             return
         if isinstance(degree, float):
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise TypeError("if the type of degree is float, second and minute must be 0")
-            self.total_seconds = int(degree * 3600)
+            object.__setattr__(self, '_tts', int(degree * 3600))
             return
         if isinstance(degree, Degree):
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if the type of degree is Degree, minute and second must be 0")
-            self.total_seconds = degree.total_seconds
+            object.__setattr__(self, '_tts', degree.total_seconds)
             return
         if isinstance(degree, int):  # type: ignore
             if (degree != 0 and (minute < 0 or second < 0)) or\
-                not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
+               not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if degree is not 0, minute and second must be positive integer")  # type: ignore
-            self.total_seconds = abs(degree) * 3600 + abs(minute) * 60 + abs(second)
+            object.__setattr__(self, '_tts', abs(degree) * 3600 + abs(minute) * 60 + abs(second))
             if degree < 0 or minute < 0 or second < 0:
-                self.total_seconds = -self.total_seconds
+                object.__setattr__(self, '_tts', -getattr(self, '_tts'))
             if minute != 0 and second < 0:
                 raise ValueError("if degree is 0, but minute is not, second must be positive integer")
 
@@ -133,7 +131,7 @@ class Degree:
     def __float__(self) -> float:
         """Return the float form of the degree object"""
         number = self.total_seconds / 3600
-        return float(int(number * 1000) / 1000)
+        return number
 
     def __bool__(self) -> bool:
         """Return True if the degree object is not equal to zero, else false"""
@@ -253,30 +251,19 @@ class Degree:
         """Return the hash value of the degree object"""
         return hash((self.deg, self.min, self.sec, self.sign))
 
-    def __setattr__(self, key: str, value: Any) -> None:
-        frame = _currentframe()
-        if frame is None:
-            del frame  # pragma: no cover
-            if not hasattr(_sys, '_getframe'):  # pragma: no cover
-                raise AttributeError("read-only attribute")  # pragma: no cover
-            frame = _sys._getframe()  # type: ignore # pragma: no cover
-        if (__f := frame.f_back) is not None:
-            if __f.f_code.co_filename != __file__:
-                del frame
-                raise AttributeError("read-only attribute")
-        del frame
-        super().__setattr__(key, value)
+    def __setattr__(self, key: str, value: Any) -> Never:
+        """You should never use this method!!!"""
+        raise AttributeError("read-only attribute")
 
     __trunc__ = __int__
 
     @classmethod
     def _construct(cls, tts: int) -> object:
         obj = cls.__new__(cls)
-        object.__setattr__(obj, 'total_seconds', tts)
+        object.__setattr__(obj, '_tts', tts)
         return obj
 
-    def __reduce_ex__(self, protocol: SupportsIndex) -> \
-            tuple[Callable[[int], object], tuple[int]]:
+    def __reduce_ex__(self, _: SupportsIndex) -> tuple[Callable[[int], object], tuple[int]]:  # type: ignore
         return (
             self._construct,
             (self.total_seconds,)
@@ -284,23 +271,23 @@ class Degree:
 
     @property
     def deg(self) -> int:
-        """Return the total number of seconds"""
+        """Return the total number of degrees"""
         if not hasattr(self, '_d'):
-            setattr(self, '_d', abs(self.total_seconds) // 3600)
+            object.__setattr__(self, '_d', abs(self.total_seconds) // 3600)
         return getattr(self, '_d')
 
     @property
     def min(self) -> int:
-        """Return the total number of seconds"""
+        """Return the total number of minutes"""
         if not hasattr(self, '_m'):
-            setattr(self, '_m', abs(self.total_seconds) % 3600 // 60)
+            object.__setattr__(self, '_m', abs(self.total_seconds) % 3600 // 60)
         return getattr(self, '_m')
 
     @property
     def sec(self) -> int:
         """Return the total number of seconds"""
         if not hasattr(self, '_s'):
-            setattr(self, '_s', abs(self.total_seconds) % 60)
+            object.__setattr__(self, '_s', abs(self.total_seconds) % 60)
         return getattr(self, '_s')
 
     @property
@@ -314,8 +301,14 @@ class Degree:
                 a = -1
             else:
                 a = 0
-            setattr(self, '_si', a)
+            object.__setattr__(self, '_si', a)
         return getattr(self, '_si')
+
+    @property
+    def total_seconds(self) -> int:
+        """Return the total number of seconds"""
+        assert isinstance(_ := getattr(self, '_tts'), int)
+        return _
 
     @staticmethod
     def from_str(string: str) -> 'Degree':
@@ -361,7 +354,7 @@ class Degree:
 
     @staticmethod
     def from_unicode(string: str) -> 'Degree':
-        """Create a degree from a string"""
+        """Create a degree from a Unicode string"""
         if string.isdecimal():
             return Degree(int(string))
         charset = ''
@@ -424,6 +417,7 @@ class Degree:
 
     @property
     def dms(self) -> tuple[int, int, int]:
+        """Return tuple(self.deg, self.min, self.sec) with sign(+-)"""
         d, m, s = self.deg, self.min, self.sec
         if self.sign == -1:
             if d > 0:
@@ -434,14 +428,26 @@ class Degree:
                 s = -s
         return d, m, s
 
-    def to_complex(self, length: int | float) -> complex:
-        if length < 0:
-            raise ValueError("length must be non-negative")
+    def to_complex(self, r: int | float) -> complex:
+        if r < 0:
+            raise ValueError("radius must be non-negative")
         theta = degree2radian(self)
         return complex(
-            length * _cos(theta),
-            length * _sin(theta)
+            r * _cos(theta),
+            r * _sin(theta)
         )
+
+    def as_integer_ratio(self) -> tuple[int, int]:
+        """Return the degree object as a ratio of two integers"""
+        tts = self.total_seconds
+        if tts == 0:
+            return 0, 1
+        gcd = _gcd(tts, 3600)
+        return tts // gcd, 3600 // gcd
+    
+    def is_integer(self) -> bool:
+        """Return True if the degree object is an integer, else False"""
+        return self.min == 0 and self.sec == 0
 
 def degree2radian(x: Degree, /) -> float:
     """Convert angle x from a degree object to radians"""
@@ -453,8 +459,8 @@ def radian2degree(x: int | float, /) -> Degree:
 
 def normalize(x: Degree, /) -> Degree:
     """Be using for angle normalization"""
-    tts = x.total_seconds * x.sign
+    tts = x.total_seconds
     norms = tts % 1_296_000
     return Degree(second=norms)
 
-del Any, overload, Iterable
+del Any, overload, Iterable, Never
