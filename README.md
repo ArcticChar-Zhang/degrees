@@ -163,6 +163,7 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 # Changelog
    1. Improved the docstrings.
    2. Changed all the arguments to property.
+   3. Fixed some bugs in the code.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the version you want, and then click "📄Browse files".<br>

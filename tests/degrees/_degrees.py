@@ -131,7 +131,7 @@ class Degree:
     def __float__(self) -> float:
         """Return the float form of the degree object"""
         number = self.total_seconds / 3600
-        return float(int(number * 1000) / 1000)
+        return number
 
     def __bool__(self) -> bool:
         """Return True if the degree object is not equal to zero, else false"""
@@ -271,14 +271,14 @@ class Degree:
 
     @property
     def deg(self) -> int:
-        """Return the total number of seconds"""
+        """Return the total number of degrees"""
         if not hasattr(self, '_d'):
             object.__setattr__(self, '_d', abs(self.total_seconds) // 3600)
         return getattr(self, '_d')
 
     @property
     def min(self) -> int:
-        """Return the total number of seconds"""
+        """Return the total number of minutes"""
         if not hasattr(self, '_m'):
             object.__setattr__(self, '_m', abs(self.total_seconds) % 3600 // 60)
         return getattr(self, '_m')
@@ -448,7 +448,7 @@ def radian2degree(x: int | float, /) -> Degree:
 
 def normalize(x: Degree, /) -> Degree:
     """Be using for angle normalization"""
-    tts = x.total_seconds * x.sign
+    tts = x.total_seconds
     norms = tts % 1_296_000
     return Degree(second=norms)
 
