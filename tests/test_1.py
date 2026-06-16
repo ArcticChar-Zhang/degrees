@@ -73,7 +73,7 @@ class TestProject(unittest.TestCase):
 
     def test_float(self):
         d1 = degrees.Degree(1, 2, 3)
-        self.assertAlmostEqual(float(d1), 1.034)
+        self.assertAlmostEqual(float(d1), 1241 / 1200)
         print(5)
 
     def test_bool(self):
@@ -93,7 +93,7 @@ class TestProject(unittest.TestCase):
         d3 = degrees.Degree(-1)
         d4 = degrees.Degree(-4, 5, 6)
         self.assertEqual(d3, -1)
-        self.assertEqual(d1, 1.034)
+        self.assertEqual(d1, 1.0341666666666667)
         self.assertGreater(d3, d4)
         self.assertLessEqual(d4, d3)
         d5 = degrees.Degree(0, 2)

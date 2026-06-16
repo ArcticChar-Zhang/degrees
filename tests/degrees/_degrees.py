@@ -1,5 +1,4 @@
 """A python library for degree calculations and conversions."""
-import sys as _sys  # type: ignore
 from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,

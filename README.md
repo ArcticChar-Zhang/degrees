@@ -3,6 +3,7 @@
 # Contents
 * [**0.4.2 Docs**](https://github.com/ArcticChar-Zhang/degrees/tree/916cb229589e56414d246a9d3cb961b1dfaa82a7)
 * [Introduction](#introduction)
+* [Installing](#installing)
 * [Importing](#importing)
 * [Class](#class)
   * [Degree](#class-degreesdegreenumberclass-degreesdegreedegree_objclass-degreesdegreedegree0-minute0-second0)
@@ -96,6 +97,9 @@ because it is useless and strange.
    `int(degree_obj)+0j`, but the latter returns `complex(length * cos(theta), length * sin(theta))`,
    `theta=degree2radian(degree_obj)`.
 
+   > [!WARNING]
+   > **Changed in version 0.4.3:** `float(degree_obj)` now returnsa precise value, but in the previous version, it returns a rounded value(eqivalent to `round(float(degree_obj), 3)` now).
+
 For example:
 ```python
 import degrees
@@ -162,7 +166,7 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    The author of this package.
 # Changelog
    1. Improved the docstrings.
-   2. Changed all the arguments to property.
+   2. Changed all the arguments to `property`.
    3. Fixed some bugs in the code.
 # Older versions
 > Looking for src and a README older version?<br>
