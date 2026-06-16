@@ -1,6 +1,7 @@
-# degrees V0.4.2
+# degrees V0.4.3a0
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
+* [**0.4.2 Docs**](https://github.com/ArcticChar-Zhang/degrees/tree/916cb229589e56414d246a9d3cb961b1dfaa82a7)
 * [Introduction](#introduction)
 * [Importing](#importing)
 * [Class](#class)
@@ -20,7 +21,7 @@
 > ### **Added in version 0.2:** Supported `pickle`.
 
 > [!WARNING]
-> ### Changed the attributes of degree in version 0.4.1. You need to be careful if you use pickle.
+> ### Changed all the attributes of _class_ `Degree` to properties in version `0.4.3`. You need to be careful if you use `pickle`.
 
 > [!NOTE]
 > ### If you want to see the code of this module, please look at the code in `src` folder; the `tests` folder is for developing, if you want to see the progress of developing or help me develop, please look at the code in `src` folder.
@@ -160,11 +161,11 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ## \_\_author\_\_
    The author of this package.
 # Changelog
-   1. Enhanced support for VS Code.
-   2. Added block `Older versions`.
+   1. Improved the docstrings.
+   2. Changed all the arguments to property.
 # Older versions
 > Looking for src and a README older version?<br>
-> Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1)<br>
+> Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the version you want, and then click "📄Browse files".<br>
 > And [here](https://pypi.org/project/degrees/#history) for versions below V0.4.1b1.
 
 > ### Write in the end
