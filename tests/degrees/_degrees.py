@@ -23,7 +23,7 @@ MINUTE = '\u2032'
 SECOND = '\u2033'
 
 class Degree:
-    __slots__ = ('total_seconds', '_s', '_d', '_m', '_si')
+    __slots__ = ('_tts', '_s', '_d', '_m', '_si')
 
     @overload
     def __init__(self, degree: int = 0, minute: int = 0, second: int = 0) -> None: ...
@@ -35,31 +35,30 @@ class Degree:
                  minute: int = 0,
                  second: int = 0) -> None:
         """Create a degree object"""
-        self.total_seconds: int
         if not isinstance(degree, (int, float, Degree)):  # type: ignore
             raise TypeError("invalid type")
         if degree == 0 and minute == 0:
             if not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise TypeError("invalid type")
-            self.total_seconds = second
+            object.__setattr__(self, '_tts', second)
             return
         if isinstance(degree, float):
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise TypeError("if the type of degree is float, second and minute must be 0")
-            self.total_seconds = int(degree * 3600)
+            object.__setattr__(self, '_tts', int(degree * 3600))
             return
         if isinstance(degree, Degree):
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if the type of degree is Degree, minute and second must be 0")
-            self.total_seconds = degree.total_seconds
+            object.__setattr__(self, '_tts', degree.total_seconds)
             return
         if isinstance(degree, int):  # type: ignore
             if (degree != 0 and (minute < 0 or second < 0)) or\
                 not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if degree is not 0, minute and second must be positive integer")  # type: ignore
-            self.total_seconds = abs(degree) * 3600 + abs(minute) * 60 + abs(second)
+            object.__setattr__(self, '_tts', abs(degree) * 3600 + abs(minute) * 60 + abs(second))
             if degree < 0 or minute < 0 or second < 0:
-                self.total_seconds = -self.total_seconds
+                object.__setattr__(self, '_tts', -self._tts)
             if minute != 0 and second < 0:
                 raise ValueError("if degree is 0, but minute is not, second must be positive integer")
 
@@ -260,7 +259,7 @@ class Degree:
     @classmethod
     def _construct(cls, tts: int) -> object:
         obj = cls.__new__(cls)
-        object.__setattr__(obj, 'total_seconds', tts)
+        object.__setattr__(obj, '_tts', tts)
         return obj
 
     def __reduce_ex__(self, _: SupportsIndex) -> tuple[Callable[[int], object], tuple[int]]:  # type: ignore
@@ -303,6 +302,11 @@ class Degree:
                 a = 0
             object.__setattr__(self, '_si', a)
         return getattr(self, '_si')
+    
+    @property
+    def total_seconds(self) -> int:
+        """Return the total number of seconds"""
+        return getattr(self, '_tts')
 
     @staticmethod
     def from_str(string: str) -> 'Degree':
