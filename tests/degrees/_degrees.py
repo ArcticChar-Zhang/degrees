@@ -429,9 +429,8 @@ class Degree:
         return d, m, s
 
     def to_complex(self, r: int | float) -> complex:
-        """Return the complex form of the degree object with modulus length and argument self"""
         if r < 0:
-            raise ValueError("length must be non-negative")
+            raise ValueError("radius must be non-negative")
         theta = degree2radian(self)
         return complex(
             r * _cos(theta),
