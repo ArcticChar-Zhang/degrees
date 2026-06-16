@@ -54,11 +54,11 @@ class Degree:
             return
         if isinstance(degree, int):  # type: ignore
             if (degree != 0 and (minute < 0 or second < 0)) or\
-                not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
+               not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if degree is not 0, minute and second must be positive integer")  # type: ignore
             object.__setattr__(self, '_tts', abs(degree) * 3600 + abs(minute) * 60 + abs(second))
             if degree < 0 or minute < 0 or second < 0:
-                object.__setattr__(self, '_tts', -self._tts)
+                object.__setattr__(self, '_tts', -getattr(self, '_tts'))
             if minute != 0 and second < 0:
                 raise ValueError("if degree is 0, but minute is not, second must be positive integer")
 
@@ -252,7 +252,8 @@ class Degree:
         return hash((self.deg, self.min, self.sec, self.sign))
 
     def __setattr__(self, key: str, value: Any) -> Never:
-        raise AttributeError('read-only attribute')
+        """You should never use this method!!!"""
+        raise AttributeError("read-only attribute")
 
     __trunc__ = __int__
 
@@ -302,11 +303,12 @@ class Degree:
                 a = 0
             object.__setattr__(self, '_si', a)
         return getattr(self, '_si')
-    
+
     @property
     def total_seconds(self) -> int:
         """Return the total number of seconds"""
-        return getattr(self, '_tts')
+        assert isinstance(_ := getattr(self, '_tts'), int)
+        return _
 
     @staticmethod
     def from_str(string: str) -> 'Degree':
@@ -426,14 +428,14 @@ class Degree:
                 s = -s
         return d, m, s
 
-    def to_complex(self, length: int | float) -> complex:
+    def to_complex(self, r: int | float) -> complex:
         """Return the complex form of the degree object with modulus length and argument self"""
-        if length < 0:
+        if r < 0:
             raise ValueError("length must be non-negative")
         theta = degree2radian(self)
         return complex(
-            length * _cos(theta),
-            length * _sin(theta)
+            r * _cos(theta),
+            r * _sin(theta)
         )
 
 def degree2radian(x: Degree, /) -> float:
