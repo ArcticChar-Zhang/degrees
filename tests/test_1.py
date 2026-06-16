@@ -2,7 +2,6 @@ import unittest
 from math import ceil, floor
 from math import degrees as degs
 import pickle
-from warnings import filterwarnings
 import degrees
 
 class TestProject(unittest.TestCase):
@@ -119,7 +118,6 @@ class TestProject(unittest.TestCase):
         print(7)
 
     def test_calc(self):
-        filterwarnings('ignore', category=DeprecationWarning)
         d1 = degrees.Degree(0)
         d2 = 0
         self.assertEqual(d2 + d1, d1)
@@ -127,7 +125,8 @@ class TestProject(unittest.TestCase):
         self.assertEqual(d2 - d1, -d1)
         self.assertEqual(d1 * d2, degrees.Degree())
         self.assertEqual(d2 * d1, degrees.Degree())
-        self.assertEqual(d1 * d1, degrees.Degree())
+        with self.assertWarns(DeprecationWarning):
+            self.assertEqual(d1 * d1, degrees.Degree())
         d1 * 0.5
         with self.assertRaises(Exception):
             d1 * ''
@@ -256,3 +255,46 @@ class TestProject(unittest.TestCase):
         self.assertEqual(degrees.Degree().as_integer_ratio(), (0, 1))
         self.assertFalse(d1.is_integer())
         print(20)
+    
+    def test_trig(self):
+        trig = degrees.trigonometry
+        degree = degrees.Degree
+        fwd_cases = [
+            (trig.sin, degree(30), 0.5),
+            (trig.sin, degree(90), 1.0),
+            (trig.sin, degree(0), 0.0),
+            (trig.sin, degree(-30), -0.5),
+            (trig.cos, degree(60), 0.5),
+            (trig.cos, degree(0), 1.0),
+            (trig.cos, degree(180), -1.0),
+            (trig.tan, degree(45), 1.0),
+            (trig.tan, degree(0), 0.0),
+            (trig.tan, degree(-45), -1.0),
+            (trig.cot, degree(45), 1.0),
+            (trig.sec, degree(0), 1.0),
+            (trig.csc, degree(90), 1.0)
+        ]
+        for func, deg, expect in fwd_cases:
+            with self.subTest(msg=f'{func.__name__}({deg})'):
+                self.assertAlmostEqual(func(deg), expect, 3)
+
+        ivt_cases = [
+            (trig.asin, 0.5, 30),
+            (trig.acos, 0.5, 60),
+            (trig.atan, 1.0, 45),
+            (trig.acot, 1.0, 45),
+            (trig.asec, 2.0, 60),
+            (trig.acsc, 2.0, 30)
+        ]
+        for func, deg, expect in ivt_cases:
+            with self.subTest(msg=f'{func.__name__}({deg})'):
+                self.assertAlmostEqual(float(func(deg)), expect, 3)
+        with self.assertRaises(ValueError):
+            trig.asin(2.0)
+        with self.assertRaises(ValueError):
+            trig.acos(-1.5)
+        with self.assertRaises(ZeroDivisionError):
+            trig.asec(0)
+        with self.assertRaises(ZeroDivisionError):
+            trig.acsc(0)
+        print(21)

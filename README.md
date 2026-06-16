@@ -1,4 +1,4 @@
-# degrees V0.4.3.post1
+# degrees V0.4.4a1
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -13,6 +13,7 @@
 * [Consts](#consts)
   * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
   * [\_\_author\_\_](#__author__)
+* [Submodule](#submodule)
 * [Changelog](#changelog)
 * [Older versions](#older-versions)
 # Introduction
@@ -108,16 +109,16 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ```
 
    - ### comparisons:
-    | expressions | `type(a)` | `type(b)`                |
-    |-------------|-----------|--------------------------|
-    | `a >= b`    | `Degree`  | `Degree \| int \| float` |
-    | `a > b`     | `Degree`  | `Degree \| int \| float` |
-    | `a == b`    | `Degree`  | `Any`                    |
-    | `a <= b`    | `Degree`  | `Degree \| int \| float` |
-    | `a < b`     | `Degree`  | `Degree \| int \| float` |
-    | `a != b`    | `Degree`  | `Any`                    |
+     | expressions | `type(a)` | `type(b)`                |
+     |-------------|-----------|--------------------------|
+     | `a >= b`    | `Degree`  | `Degree \| int \| float` |
+     | `a > b`     | `Degree`  | `Degree \| int \| float` |
+     | `a == b`    | `Degree`  | `Any`                    |
+     | `a <= b`    | `Degree`  | `Degree \| int \| float` |
+     | `a < b`     | `Degree`  | `Degree \| int \| float` |
+     | `a != b`    | `Degree`  | `Any`                    |
     
-    In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
+     In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
 
    - ### _property_ deg
      The degree of a degree object(without sign).
@@ -172,15 +173,27 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    Equals to `°`, `′` and `″`.
 ## \_\_author\_\_
    The author of this package.
+# Submodule
+  - ### _degrees_.trigonometry
+     A submodule for trigonometric functions.
+     Supported functions:
+
+     | `sin` | `cos` | `tan` | `asin` | `acos` | `atan` |
+     |-------|-------|-------|--------|--------|--------|
+     | `cot` | `sec` | `csc` | `acot` | `asec` | `acsc` |
+     
+     The functions start with `a` are inverse trigonometric functions, and the others are forward trigonometric
+functions. Here is the input types and return types of these functions:<br>
+     `def forward_trigonometric_function(x: Degree) -> float: ...`<br>
+     `def inverse_trigonometric_function(x: int | float) -> Degree: ...`
+
 # Changelog
-   1. Improved the docstrings.
-   2. Changed all the arguments to `property`.
-   3. Fixed some bugs in the code.
-   4. Added the `is_integer` and `as_integer_ratio` methods to _class `Degree`_.
+   1. Added trigonometric functions.
 # Older versions
 > Looking for src and a README older version?<br>
-> Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the version you want, and then click "📄Browse files".<br>
-> And [here](https://pypi.org/project/degrees/#history) for versions below V0.4.1b1.
+> Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the
+> version you want, and then click "📄Browse files".<br>
+> And [here](https://pypi.org/project/degrees/#history) for versions below V0.4.1.
 
 > ### Write in the end
 > If you found the bug in the code, you can email me at `snake830@vip.163.com`. I am happy to receive the advice!

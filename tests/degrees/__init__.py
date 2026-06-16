@@ -7,6 +7,7 @@ from ._degrees import (Degree,
                        MINUTE,
                        SECOND)
 from ._version import version_info
+from . import trigonometry
 
 __all__: list[str] = [
     'Degree',
@@ -16,7 +17,8 @@ __all__: list[str] = [
     'version_info',
     'DEGREE',
     'MINUTE',
-    'SECOND'
+    'SECOND',
+    'trigonometry'
 ]
 
 __author__ = 'Zhang Jiarui'
