@@ -4,6 +4,7 @@ from math import (radians as _radians,
                   cos as _cos,
                   sin as _sin,
                   gcd as _gcd)
+from cmath import phase as _phase
 from collections.abc import Iterable, Callable
 from warnings import warn as _warn
 from typing import Any, SupportsIndex, overload, Never
@@ -449,18 +450,14 @@ class Degree:
         """Return True if the degree object is an integer, else False"""
         return self.min == 0 and self.sec == 0
 
-def degree2radian(x: Degree, /) -> float:
-    """Convert angle x from a degree object to radians"""
-    return _radians(x.total_seconds / 3600)
-
-def radian2degree(x: int | float, /) -> Degree:
-    """Convert angle x from radians to a degree object"""
-    return Degree(_degrees(x))
-
 def normalize(x: Degree, /) -> Degree:
     """Be using for angle normalization"""
     tts = x.total_seconds
     norms = tts % 1_296_000
     return Degree(second=norms)
+
+degree2radian: Callable[[Degree], int | float] = lambda x: _radians(x.total_seconds / 3600)
+radian2degree: Callable[[int | float], Degree] = lambda x: Degree(_degrees(x))
+arg: Callable[[int | float | complex], Degree] = lambda x: radian2degree(_phase(x))
 
 del Any, overload, Iterable, Never
