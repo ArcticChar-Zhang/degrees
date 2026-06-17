@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "degrees"
-version = "0.4.4a1"
+version = "0.4.4"
 authors = [
     { name="ArcticChar", email="snake830@vip.163.com" }
 ]
@@ -22,3 +22,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[project.urls]
+Homepage = "https://github.com/ArcticChar-Zhang/degrees"
+Repository = "https://github.com/ArcticChar-Zhang/degrees"
+"Bug Tracker" = "https://github.com/ArcticChar-Zhang/degrees/issues"

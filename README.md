@@ -1,4 +1,4 @@
-# degrees V0.4.4a1
+# degrees V0.4.4
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -93,8 +93,8 @@ because it is useless and strange.
     In the table above, `type(a)` is `Degree`.
 
    > [!NOTE]
-   > The `complex(degree_obj)` is different from `degree_obj.to_complex(length)`. The former returns
-   `int(degree_obj)+0j`, but the latter returns `complex(length * cos(theta), length * sin(theta))`,
+   > The `complex(degree_obj)` is different from `degree_obj.to_complex(r)`. The former returns
+   > `int(degree_obj)+0j`, but the latter returns `complex(r * cos(theta), r * sin(theta))`,
    `theta=degree2radian(degree_obj)`.
 
    > [!WARNING]
@@ -149,8 +149,8 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      Return `True` if the degree object is an integer, else `False`. For example, `Degree(1, 30).is_integer()` returns `False`, but `Degree(1).is_integer()` returns `True`.
    > [!TIP]
    > **Added in version 0.4.3.**
-   - ### to_complex(length: int | float)
-     Returns the complex number corresponding to `(angle=self, radius=length)`.
+   - ### to_complex(r: int | float)
+     Returns the complex number corresponding to `(angle=self, radius=r)`.
    > [!TIP]
    > **Added in version 0.2.1.**
    
