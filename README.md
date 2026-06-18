@@ -1,4 +1,4 @@
-# degrees V0.5.0
+# degrees V0.5.0.post1
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -87,7 +87,7 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
     
     In the table above, `type(a)` is `Degree`.
 
-   > [!NOTE]
+   > [!IMPORTANT]
    > The `complex(degree_obj)` is different from `degree_obj.to_complex(r)`. The former returns
    > `int(degree_obj)+0j`, but the latter returns `complex(r * cos(theta), r * sin(theta))`,
    `theta=degree2radian(degree_obj)`.
@@ -211,6 +211,9 @@ functions. Here is the input types and return types of these functions:<br>
    2. Added argument `origin` to function `normalize`.
    3. Added function `set_north`.
    4. Forbidded `Degree_obj` * `Degree_obj`.
+   5. Fixed bugs in methods `from_str` and `from_unicode`, and optimized them.
+   6. Added some annotations in `Degree.__init__`.
+   7. Added `py.typed`.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the

@@ -115,6 +115,7 @@ class TestProject(unittest.TestCase):
             self.assertGreater(degrees.Degree(11, 1), 12)
         with self.assertRaises(TypeError):
             degrees.Degree() > ''
+        self.assertNotEqual(degrees.Degree(), '')
         print(7)
 
     def test_calc(self):
@@ -225,6 +226,7 @@ class TestProject(unittest.TestCase):
         s1 = "1°2′3″"
         self.assertEqual(degrees.Degree.from_unicode(s1), degrees.Degree(1, 2, 3))
         self.assertEqual(degrees.Degree.from_unicode('0'), degrees.Degree())
+        self.assertEqual(degrees.Degree.from_unicode('30°'), 30)
         with self.assertRaises(ValueError):
             degrees.Degree.from_unicode('1]')
         with self.assertRaises(ValueError):
@@ -316,7 +318,6 @@ class TestProject(unittest.TestCase):
         self.assertEqual(degrees.SIXTY_DEG, 60)
         self.assertEqual(degrees.GOLDEN_ANGLE, degrees.Degree(137.50776405003785))
         degrees.set_north(90)
-        print(id(degrees.NORTH), id(degrees._consts.NORTH))
         self.assertEqual(degrees.NORTH, 90)
         self.assertEqual(degrees.EAST, 180)
         self.assertEqual(degrees.SOUTH, 270)

@@ -3,7 +3,8 @@ from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,
                   sin as _sin,
-                  gcd as _gcd)
+                  gcd as _gcd,
+                  isclose as _isclose)
 from cmath import phase as _phase
 from collections.abc import Iterable, Callable
 from typing import Any, SupportsIndex, overload, Never
@@ -36,23 +37,28 @@ class Degree:
                  second: int = 0) -> None:
         """Create a degree object"""
         if not isinstance(degree, (int, float, Degree)):  # type: ignore
+            # invalid type
             raise TypeError("invalid type")
         if degree == 0 and minute == 0:
+            # for +-*/%, // and so on
             if not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise TypeError("invalid type")
             object.__setattr__(self, '_tts', second)
             return
         if isinstance(degree, float):
+            # Degree(xxx.xxx)
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise TypeError("if the type of degree is float, second and minute must be 0")
             object.__setattr__(self, '_tts', int(degree * 3600))
             return
         if isinstance(degree, Degree):
+            # Degree(Degree(xxx))
             if second != 0 or not isinstance(second, int) or minute != 0 or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if the type of degree is Degree, minute and second must be 0")
             object.__setattr__(self, '_tts', degree.total_seconds)
             return
         if isinstance(degree, int):  # type: ignore
+            # Degree(xxx)
             if (degree != 0 and (minute < 0 or second < 0)) or\
                not isinstance(second, int) or not isinstance(minute, int):  # type: ignore
                 raise ValueError("if degree is not 0, minute and second must be positive integer")  # type: ignore
@@ -63,6 +69,7 @@ class Degree:
                 raise ValueError("if degree is 0, but minute is not, second must be positive integer")
 
         if not isinstance(self.total_seconds, int):  # type: ignore
+            # last check for security
             raise TypeError("unknown type")  # pragma: no cover
 
     def __abs__(self) -> 'Degree':
@@ -143,6 +150,8 @@ class Degree:
             return self.total_seconds == other * 3600
         if isinstance(other, Degree):
             return self.total_seconds == other.total_seconds
+        if isinstance(other, float):
+            return _isclose(self, other)
         return float(self) == other
 
     def __gt__(self, other: int | float | 'Degree') -> bool:
@@ -305,86 +314,12 @@ class Degree:
     @staticmethod
     def from_str(string: str) -> 'Degree':
         """Create a degree from a string"""
-        if string.isdecimal():
-            return Degree(int(string))
-        charset = ''
-        signs = (DEGREE, "'", '"')
-        if string[-1] not in signs:
-            raise ValueError("Incorrect string format")
-        set_ = ()
-        for i in string:
-            if i.isdigit():
-                charset += str(i)
-            else:
-                set_ += ((int(charset), signs.index(i)),)
-                charset = ''
-        if len(set_) > 3:
-            raise ValueError("Incorrect string format")
-        # noinspection PyTypeChecker
-        if set_[0][1] == 0 and set_[1][1] == 2:  # type: ignore
-            raise ValueError(f'Incorrect string format: do not support strings like "a{DEGREE}b{SECOND}", '
-                             f'please use "a{DEGREE}0{MINUTE}b{SECOND}".')
-        deg = min_ = sec = 0
-        judge = -1
-        for i in set_:
-            # noinspection PyUnresolvedReferences
-            if i[1] <= judge:  # type: ignore
-                raise ValueError("Incorrect string format")  # type: ignore
-            # noinspection PyUnresolvedReferences
-            judge = i[1]
-            # noinspection PyUnresolvedReferences
-            if judge == 0:  # type: ignore
-                # noinspection PyUnresolvedReferences
-                deg = i[0]  # type: ignore
-            elif judge == 1:  # type: ignore
-                # noinspection PyUnresolvedReferences
-                min_ = i[0]  # type: ignore
-            else:
-                # noinspection PyUnresolvedReferences
-                sec = i[0]  # type: ignore
-        return Degree(deg, min_, sec)
+        return _t_from_str(string, (DEGREE, "'", '"'), '')
 
     @staticmethod
     def from_unicode(string: str) -> 'Degree':
         """Create a degree from a Unicode string"""
-        if string.isdecimal():
-            return Degree(int(string))
-        charset = ''
-        signs = (DEGREE, MINUTE, SECOND)
-        if string[-1] not in signs:
-            raise ValueError("Incorrect unicode string format")
-        set_ = ()
-        for i in string:
-            if i.isdigit():
-                charset += str(i)
-            else:
-                set_ += ((int(charset), signs.index(i)),)
-                charset = ''
-        if len(set_) > 3:
-            raise ValueError("Incorrect unicode string format")
-        # noinspection PyTypeChecker
-        if set_[0][1] == 0 and set_[1][1] == 2:  # type: ignore
-            raise ValueError(f'Incorrect string format: do not support strings like "a{DEGREE}b{SECOND}", '
-                             f'please use "a{DEGREE}0{MINUTE}b{SECOND}".')
-        deg = min_ = sec = 0
-        judge = -1
-        for i in set_:
-            # noinspection PyUnresolvedReferences
-            if i[1] <= judge:  # type: ignore
-                raise ValueError("Incorrect string format")  # type: ignore
-            # noinspection PyUnresolvedReferences
-            judge = i[1]
-            # noinspection PyUnresolvedReferences
-            if judge == 0:  # type: ignore
-                # noinspection PyUnresolvedReferences
-                deg = i[0]  # type: ignore
-            elif judge == 1:  # type: ignore
-                # noinspection PyUnresolvedReferences
-                min_ = i[0]  # type: ignore
-            else:
-                # noinspection PyUnresolvedReferences
-                sec = i[0]  # type: ignore
-        return Degree(deg, min_, sec)
+        return _t_from_str(string, (DEGREE, MINUTE, SECOND), 'Unicode ')
 
     @staticmethod
     def from_iter(iterable: Iterable[int]) -> 'Degree':
@@ -440,6 +375,45 @@ class Degree:
     def is_integer(self) -> bool:
         """Return True if the degree object is an integer, else False"""
         return self.min == 0 and self.sec == 0
+
+def _t_from_str(string: str, signs: tuple[str, str, str], isuni: str) -> 'Degree':
+    if string.isdecimal():
+        return Degree(int(string))
+    charset = ''
+    if string[-1] not in signs:
+        raise ValueError(f"Incorrect {isuni}string format")
+    set_ = ()
+    for i in string:
+        if i.isdigit():
+            charset += i
+        else:
+            set_ += ((int(charset), signs.index(i)),)
+            charset = ''
+    if len(set_) > 3:
+        raise ValueError(f"Incorrect {isuni}string format")
+    # noinspection PyTypeChecker
+    if len(set_) >= 2 and set_[0][1] == 0 and set_[1][1] == 2:  # type: ignore
+        raise ValueError(f'Incorrect {isuni}string format: do not support strings like "a{DEGREE}b{SECOND}", '
+                            f'please use "a{DEGREE}0{MINUTE}b{SECOND}".')
+    deg = min_ = sec = 0
+    judge = -1
+    for i in set_:
+        # noinspection PyUnresolvedReferences
+        if i[1] <= judge:  # type: ignore
+            raise ValueError(f"Incorrect {isuni}string format")  # type: ignore
+        # noinspection PyUnresolvedReferences
+        judge = i[1]
+        # noinspection PyUnresolvedReferences
+        if judge == 0:  # type: ignore
+            # noinspection PyUnresolvedReferences
+            deg = i[0]  # type: ignore
+        elif judge == 1:  # type: ignore
+            # noinspection PyUnresolvedReferences
+            min_ = i[0]  # type: ignore
+        else:
+            # noinspection PyUnresolvedReferences
+            sec = i[0]  # type: ignore
+    return Degree(deg, min_, sec)
 
 def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
     """Be using for angle normalization"""
