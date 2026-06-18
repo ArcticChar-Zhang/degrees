@@ -6,7 +6,6 @@ from math import (radians as _radians,
                   gcd as _gcd)
 from cmath import phase as _phase
 from collections.abc import Iterable, Callable
-from warnings import warn as _warn
 from typing import Any, SupportsIndex, overload, Never
 
 __all__: list[str] = [
@@ -190,22 +189,14 @@ class Degree:
         """Return the difference of other and self"""
         return -(self.__sub__(other))
 
-    def __mul__(self, other: int | float | 'Degree') -> 'Degree':
+    def __mul__(self, other: int | float) -> 'Degree':
         """Return the product of self and other"""
-        if isinstance(other, Degree):
-            _warn('"Degree_obj" * "Degree_obj" is deprecated since version 0.4.0, will be removed in version 0.5'
-                  '.0.', DeprecationWarning)
-            srad = degree2radian(self)
-            orad = degree2radian(other)
-            resrad = srad * orad
-            resdeg = _degrees(resrad)
-            return Degree(resdeg)
         if isinstance(other, (int, float)):  # type: ignore
             tts = int(self.total_seconds * other)
             return Degree(second=tts)
-        raise Exception("invalid type")
+        raise TypeError("invalid type")
 
-    def __rmul__(self, other: int | float | 'Degree') -> 'Degree':
+    def __rmul__(self, other: int | float) -> 'Degree':
         """Return the product of other and self"""
         return self * other
 
@@ -450,11 +441,11 @@ class Degree:
         """Return True if the degree object is an integer, else False"""
         return self.min == 0 and self.sec == 0
 
-def normalize(x: Degree, /) -> Degree:
+def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
     """Be using for angle normalization"""
     tts = x.total_seconds
     norms = tts % 1_296_000
-    return Degree(second=norms)
+    return Degree(second=norms) + origin
 
 degree2radian: Callable[[Degree], int | float] = lambda x: _radians(x.total_seconds / 3600)
 radian2degree: Callable[[int | float], Degree] = lambda x: Degree(_degrees(x))

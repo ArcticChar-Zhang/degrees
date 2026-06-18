@@ -125,7 +125,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(d2 - d1, -d1)
         self.assertEqual(d1 * d2, degrees.Degree())
         self.assertEqual(d2 * d1, degrees.Degree())
-        with self.assertWarns(DeprecationWarning):
+        with self.assertRaises(TypeError):
             self.assertEqual(d1 * d1, degrees.Degree())
         d1 * 0.5
         with self.assertRaises(Exception):
@@ -298,3 +298,26 @@ class TestProject(unittest.TestCase):
         with self.assertRaises(ZeroDivisionError):
             trig.acsc(0)
         print(21)
+    
+    def test_consts(self):
+        self.assertEqual(degrees.RIGHT_ANGLE, 90)
+        self.assertEqual(degrees.HALF_PI, 90)
+        self.assertEqual(degrees.EAST, 90)
+        self.assertEqual(degrees.STRAIGHT_ANGLE, 180)
+        self.assertEqual(degrees.FULL_ANGLE, 360)
+        self.assertEqual(degrees.PI, 180)
+        self.assertEqual(degrees.SOUTH, 180)
+        self.assertEqual(degrees.WEST, 270)
+        self.assertEqual(degrees.ZERO_ANGLE, 0)
+        self.assertEqual(degrees.NORTH, 0)
+        self.assertEqual(degrees.TWO_PI, 360)
+        self.assertEqual(degrees.THIRTY_DEG, 30)
+        self.assertEqual(degrees.FORTY_FIVE_DEG, 45)
+        self.assertEqual(degrees.SIXTY_DEG, 60)
+        self.assertEqual(degrees.GOLDEN_ANGLE, degrees.Degree(137.50776405003785))
+        degrees.set_north(90)
+        print(id(degrees.NORTH), id(degrees._consts.NORTH))
+        self.assertEqual(degrees.NORTH, 90)
+        self.assertEqual(degrees.EAST, 180)
+        self.assertEqual(degrees.SOUTH, 270)
+        self.assertEqual(degrees.WEST, 0)

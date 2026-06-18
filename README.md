@@ -1,4 +1,4 @@
-# degrees V0.4.4
+# degrees V0.5.0
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -10,7 +10,7 @@
   * [degree2radian](#degreesdegree2radianx-degree-)
   * [radian2degree](#degreesradian2degreex-int--float-)
   * [normalize](#degreesnormalizex-degree-)
-* [Consts](#consts)
+* [Constants](#constants)
   * [DEGREE<br>MINUTE<br>SECOND](#degreeminutesecond)
   * [\_\_author\_\_](#__author__)
 * [Submodule](#submodule)
@@ -62,7 +62,6 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
     |                 | `int \| float` | `Degree`       | `Degree`    |
     | `a * b`         | `Degree`       | `int \| float` | `Degree`    |
     |                 | `int \| float` | `Degree`       | `Degree`    |
-    |                 | `Degree`       | `Degree`       | `Degree`    |
     | `a / b`         | `Degree`       | `Degree`       | `float`     |
     |                 | `Degree`       | `int \| float` | `Degree`    |
     | `math.trunc(a)` | `Degree`       | /              | `Degree`    |
@@ -81,10 +80,6 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
    > [!TIP]
    > **Added in version 0.4.0:** Now `deg_obj * float_obj` is supported. In the previous version, only
 `deg_obj * int_obj` is supported.
-    
-   > [!CAUTION]
-   > **Deprecated since version 0.4.0, will be removed in version 0.5.0:** `Degree_obj * Degree_obj` is deprecated
-because it is useless and strange.
 
    - ### conversions:
     | `int(a)` | `float(a)` | `str(a)` | `repr(a)` | `bool(a)` | `complex(a)` |
@@ -122,14 +117,14 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 
    - ### _property_ deg
      The degree of a degree object(without sign).
-   - ### _property_ dms
-     A tuple of `(degree, minute, second)`.
    - ### _property_ min
      The minute of a degree object(without sign).
    - ### _property_ sec
      The second of a degree object(without sign).
    - ### _property_ sign
      The sign of a degree object.
+   - ### _property_ dms
+     A tuple of `(degree, minute, second)`.
    - ### _property_ total_seconds
      The total seconds of a degree object.
    - ### _staticmethod_ from_iter(iterable)
@@ -146,7 +141,8 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    > [!TIP]
    > **Added in version 0.4.3.**
    - ### is_integer()
-     Return `True` if the degree object is an integer, else `False`. For example, `Degree(1, 30).is_integer()` returns `False`, but `Degree(1).is_integer()` returns `True`.
+     Return `True` if the degree object is an integer, else `False`. For example, `Degree(1, 30).is_integer()` returns
+     `False`, but `Degree(1).is_integer()` returns `True`.
    > [!TIP]
    > **Added in version 0.4.3.**
    - ### to_complex(r: int | float)
@@ -161,20 +157,42 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    - Convert angle x from a degree object to radians.
 ## _degrees_.radian2degree(x: int | float, /)
    - Convert angle x from radians to a degree object.
-## _degrees_.normalize(x: Degree, /)
-   - Used for angle normalization.
+## _degrees_.normalize(x: Degree, /, origin: int | float | Degree)
+   - Normalize angle x to range `[origin, origin + 360)`.
+## _degrees_.set_north(n: Degree | int | float)
+   - Set north to n, east to (n + 90), south to (n + 180), west to (n + 270).
+   Never Use \"NORTH=Degree(xxx)\".
 # Version
 ## version_info
    - The version of this package, like
 [`sys.version_info`](https://docs.python.org/3.14/library/sys.html#sys.version_info)
 &larr; click for more info.
-# Consts
-## DEGREE<br>MINUTE<br>SECOND
+# Constants
+## _degrees_.DEGREE<br>_degrees_.MINUTE<br>_degrees_.SECOND
    Equals to `°`, `′` and `″`.
+## some other consts
+   | name                             | value                 |
+   |----------------------------------|-----------------------|
+   | `ZERO_ANGLE`, `NORTH`            | `Degree(0)`           |
+   | `THIRTY_DEG`                     | `Degree(30)`          |
+   | `FORTY_FIVE_DEG`                 | `Degree(45)`          |
+   | `SIXTY_DEG`                      | `Degree(60)`          |
+   | `RIGHT_ANGLE`, `HALF_PI`, `EAST` | `Degree(90)`          |
+   | `GOLDEN_ANGLE`                   | `Degree(137, 30, 27)` |
+   | `STRAIGHT_ANGLE`, `PI`, `SOUTH`  | `Degree(180)`         |
+   | `WEST`                           | `Degree(270)`         |
+   | `FULL_ANGLE`, `TWO_PI`           | `Degree(360)`         |
+   
+   > [!NOTE]
+   > You can use the function `set_north` to set the constants `NORTH`,
+   > then `EAST = (NORTH+90°) % 360°`, `SOUTH = (NORTH+180°) % 360°`, `WEST = (NORTH+270°) % 360°`.
+   > Never use `degrees.NORTH = xxx` because `EAST`, `SOUTH` and `WEST` will **NOT** change.
+   > [!TIP]
+   > **Added the constants in the table above in version 0.5.0.**
 ## \_\_author\_\_
    The author of this package.
 # Submodule
-  - ### _degrees_.trigonometry
+  - ## _module degrees_.trigonometry
      A submodule for trigonometric functions.
      Supported functions:
 
@@ -185,10 +203,14 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      The functions start with `a` are inverse trigonometric functions, and the others are forward trigonometric
 functions. Here is the input types and return types of these functions:<br>
      `def forward_trigonometric_function(x: Degree) -> float: ...`<br>
-     `def inverse_trigonometric_function(x: int | float) -> Degree: ...`
-
+     `def inverse_trigonometric_function(x: int | float) -> Degree: ...`<br>
+     (`forward_trigonometric_function` and `inverse_trigonometric_function` are referred to the functions in the table,
+     and these two functions do not exist. Do not use them.)
 # Changelog
-   1. Added trigonometric functions.
+   1. Added some constants.
+   2. Added argument `origin` to function `normalize`.
+   3. Added function `set_north`.
+   4. Forbidded `Degree_obj` * `Degree_obj`.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the
