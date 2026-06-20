@@ -7,7 +7,7 @@ from math import (radians as _radians,
                   isclose as _isclose)
 from cmath import phase as _phase
 from collections.abc import Iterable, Callable
-from typing import Any, SupportsIndex, overload, Never
+from typing import Any, SupportsIndex, overload, Never, TypeVar
 
 __all__: list[str] = [
     "Degree",
@@ -16,7 +16,8 @@ __all__: list[str] = [
     "normalize",
     "DEGREE",
     "MINUTE",
-    "SECOND"
+    "SECOND",
+    "_assert"
 ]
 
 DEGREE = '\u00b0'
@@ -25,6 +26,7 @@ SECOND = '\u2033'
 
 class Degree:
     __slots__ = ('_tts', '_s', '_d', '_m', '_si')
+    __match_args__ = ('dms',)
 
     @overload
     def __init__(self, degree: int = 0, minute: int = 0, second: int = 0) -> None: ...
@@ -130,6 +132,24 @@ class Degree:
         if not (self.min or self.sec):
             return -self.deg
         return -self.deg - 1
+
+    def __round__(self, ndigits: int = 0, /) -> 'int | Degree':
+        """Return the nearest integer to its input if ndigits is omitted or None.
+        Return self rounded to nearest degree if ndigits is 1.
+        Return self rounded to nearest minute if ndigits is 2.
+        Return self not changed if ndigits is 3.
+        Otherwise, raise ValueError."""
+        match ndigits:
+            case 0:
+                return self.deg if self.min < 30 else self.deg + 1
+            case 1:
+                return Degree(self.deg if self.min < 30 else self.deg + 1)
+            case 2:
+                return Degree(self.deg, self.min if self.sec < 30 else self.min + 1)
+            case 3:
+                return self
+            case _:
+                raise ValueError('invalid value')
 
     def __int__(self) -> int:
         """Return the integer form of the degree object"""
@@ -394,7 +414,7 @@ def _t_from_str(string: str, signs: tuple[str, str, str], isuni: str) -> 'Degree
     # noinspection PyTypeChecker
     if len(set_) >= 2 and set_[0][1] == 0 and set_[1][1] == 2:  # type: ignore
         raise ValueError(f'Incorrect {isuni}string format: do not support strings like "a{DEGREE}b{SECOND}", '
-                            f'please use "a{DEGREE}0{MINUTE}b{SECOND}".')
+                         f'please use "a{DEGREE}0{MINUTE}b{SECOND}".')
     deg = min_ = sec = 0
     judge = -1
     for i in set_:
@@ -415,6 +435,15 @@ def _t_from_str(string: str, signs: tuple[str, str, str], isuni: str) -> 'Degree
             sec = i[0]  # type: ignore
     return Degree(deg, min_, sec)
 
+_T = TypeVar('_T')
+
+def _assert(x: _T, klass: Any, err: type[Exception] = TypeError, msg: str = 'invalid type') -> _T:
+    """Inner API. Do NOT use it."""
+    if not isinstance(x, klass):
+        # noinspection PyCallingNonCallable
+        raise err(msg)
+    return x
+
 def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
     """Be using for angle normalization"""
     tts = x.total_seconds
@@ -425,4 +454,4 @@ degree2radian: Callable[[Degree], int | float] = lambda x: _radians(x.total_seco
 radian2degree: Callable[[int | float], Degree] = lambda x: Degree(_degrees(x))
 arg: Callable[[int | float | complex], Degree] = lambda x: radian2degree(_phase(x))
 
-del Any, overload, Iterable, Never
+del Any, overload, Iterable, Never, TypeVar, _T

@@ -68,6 +68,12 @@ class TestProject(unittest.TestCase):
         self.assertEqual(floor(d3), 0)
         self.assertEqual(ceil(d4), 1)
         self.assertEqual(floor(-d4), -1)
+        self.assertEqual(round(d1), 1)
+        self.assertEqual(round(d1, 1), degrees.Degree(1))
+        self.assertEqual(round(d1, 2), degrees.Degree(1, 2))
+        self.assertEqual(round(d1, 3), degrees.Degree(1, 2, 3))
+        with self.assertRaises(ValueError):
+            round(d1, 4)
         print(4)
 
     def test_float(self):
@@ -322,3 +328,24 @@ class TestProject(unittest.TestCase):
         self.assertEqual(degrees.EAST, 180)
         self.assertEqual(degrees.SOUTH, 270)
         self.assertEqual(degrees.WEST, 0)
+        print(22)
+    
+    def test_exch(self):
+        self.assertEqual(degrees.from_gon(3), degrees.Degree(2, 42))
+        self.assertAlmostEqual(degrees.to_gon(degrees.Degree(2, 42)), 3)
+        self.assertEqual(degrees.from_turn(0), 0)
+        self.assertAlmostEqual(degrees.to_turn(degrees.Degree(720)), 2)
+        with self.assertRaises(TypeError):
+            degrees.from_gon('')
+        print(23)
+
+    def test_match(self):
+        d1 = degrees.Degree()
+        x = -1
+        match d1:
+            case degrees.Degree((1, 2, 3)):
+                x = 0  # pragma: no cover
+            case _:
+                x = 1
+        self.assertEqual(x, 1)
+        print(24)

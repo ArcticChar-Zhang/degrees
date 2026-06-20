@@ -3,6 +3,7 @@ from ._degrees import *
 from ._version import *
 from . import trigonometry
 from ._consts import *
+from ._exchanges import *
 
 __all__: list[str] = [
     'Degree',
@@ -42,3 +43,5 @@ def set_north(n: int | float | Degree, /):
     EAST = normalize(NORTH + 90)  # type: ignore
     SOUTH = normalize(NORTH + 180)  # type: ignore
     WEST = normalize(NORTH + 270)  # type: ignore
+
+del _assert

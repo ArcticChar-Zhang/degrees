@@ -1,4 +1,4 @@
-# degrees V0.5.0.post1
+# degrees V0.5.1a1
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -38,6 +38,7 @@ If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/p
 # Class
 - ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
    - ### Creating a Degree object
+
    > [!WARNING]
    > **Changed in version 0.4.0:** The arguments' names are changed since version 0.4.2. Please be careful if you
    > use keyword arguments. Now the arguments are: `degree`, `minute`, `second`. It does not depend on the overloads.
@@ -54,26 +55,26 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
 ```
 
    - ### calculating:
-    | expressions     | `type(a)`      | `type(b)`      | return type |
-    |-----------------|----------------|----------------|-------------|
-    | `a + b`         | `Degree`       | `int \| float` | `Degree`    |
-    |                 | `int \| float` | `Degree`       | `Degree`    |
-    | `a - b`         | `Degree`       | `int \| float` | `Degree`    |
-    |                 | `int \| float` | `Degree`       | `Degree`    |
-    | `a * b`         | `Degree`       | `int \| float` | `Degree`    |
-    |                 | `int \| float` | `Degree`       | `Degree`    |
-    | `a / b`         | `Degree`       | `Degree`       | `float`     |
-    |                 | `Degree`       | `int \| float` | `Degree`    |
-    | `math.trunc(a)` | `Degree`       | /              | `Degree`    |
-    | `abs(a)`        | `Degree`       | /              | `Degree`    |
-    | `math.ceil(a)`  | `Degree`       | /              | `Degree`    |
-    | `math.floor(a)` | `Degree`       | /              | `Degree`    |
-    | `a % b`         | `Degree`       | `Degree`       | `Degree`    |
-    | `a // b`        | `Degree`       | `Degree`       | `int`       |
-    |                 | `Degree`       | `int \| float` | `Degree`    |
-    | `+a`            | `Degree`       | /              | `Degree`    |
-    | `-a`            | `Degree`       | /              | `Degree`    |
-    | `hash(a)`       | `Degree`       | /              | `int`       |
+   | expressions     | `type(a)`      | `type(b)`      | return type |
+   |-----------------|----------------|----------------|-------------|
+   | `a + b`         | `Degree`       | `int \| float` | `Degree`    |
+   |                 | `int \| float` | `Degree`       | `Degree`    |
+   | `a - b`         | `Degree`       | `int \| float` | `Degree`    |
+   |                 | `int \| float` | `Degree`       | `Degree`    |
+   | `a * b`         | `Degree`       | `int \| float` | `Degree`    |
+   |                 | `int \| float` | `Degree`       | `Degree`    |
+   | `a / b`         | `Degree`       | `Degree`       | `float`     |
+   |                 | `Degree`       | `int \| float` | `Degree`    |
+   | `math.trunc(a)` | `Degree`       | /              | `Degree`    |
+   | `abs(a)`        | `Degree`       | /              | `Degree`    |
+   | `math.ceil(a)`  | `Degree`       | /              | `Degree`    |
+   | `math.floor(a)` | `Degree`       | /              | `Degree`    |
+   | `a % b`         | `Degree`       | `Degree`       | `Degree`    |
+   | `a // b`        | `Degree`       | `Degree`       | `int`       |
+   |                 | `Degree`       | `int \| float` | `Degree`    |
+   | `+a`            | `Degree`       | /              | `Degree`    |
+   | `-a`            | `Degree`       | /              | `Degree`    |
+   | `hash(a)`       | `Degree`       | /              | `int`       |
    > [!TIP]
    > **Added in version 0.1.7:** Implemented the `math.trunc` function on the Degree objects.
     
@@ -82,10 +83,10 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
 `deg_obj * int_obj` is supported.
 
    - ### conversions:
-    | `int(a)` | `float(a)` | `str(a)` | `repr(a)` | `bool(a)` | `complex(a)` |
-    |----------|------------|----------|-----------|-----------|--------------|
+   | `int(a)` | `float(a)` | `str(a)` | `repr(a)` | `bool(a)` | `complex(a)` |
+   |----------|------------|----------|-----------|-----------|--------------|
     
-    In the table above, `type(a)` is `Degree`.
+   In the table above, `type(a)` is `Degree`.
 
    > [!IMPORTANT]
    > The `complex(degree_obj)` is different from `degree_obj.to_complex(r)`. The former returns
@@ -93,7 +94,7 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
    `theta=degree2radian(degree_obj)`.
 
    > [!WARNING]
-   > **Changed in version 0.4.3:** `float(degree_obj)` now returnsa precise value, but in the previous version, it returns a rounded value(eqivalent to `round(float(degree_obj), 3)` now).
+   > **Changed in version 0.4.3:** `float(degree_obj)` now returns a precise value, but in the previous version, it returns a rounded value(eqivalent to `round(float(degree_obj), 3)` now).
 
 For example:
 ```python
