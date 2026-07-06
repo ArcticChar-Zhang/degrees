@@ -20,4 +20,18 @@ acot: Callable[[int | float], Degree] = lambda x: _r2d(_math.atan(1 / x))
 asec: Callable[[int | float], Degree] = lambda x: _r2d(_math.acos(1 / x))
 acsc: Callable[[int | float], Degree] = lambda x: _r2d(_math.asin(1 / x))
 
-del Callable
+sin.__doc__ = 'Return sin(x).'
+cos.__doc__ = 'Return cos(x).'
+tan.__doc__ = 'Return tan(x).'
+cot.__doc__ = 'Return cot(x).'
+sec.__doc__ = 'Return sec(x).'
+csc.__doc__ = 'Return csc(x).'
+
+asin.__doc__ = 'Return asin(x).'
+acos.__doc__ = 'Return acos(x).'
+atan.__doc__ = 'Return atan(x).'
+acot.__doc__ = 'Return acot(x).'
+asec.__doc__ = 'Return asec(x).'
+acsc.__doc__ = 'Return acsc(x).'
+
+del Callable, Degree

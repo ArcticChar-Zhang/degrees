@@ -29,7 +29,8 @@ __all__: list[str] = [
     'THIRTY_DEG',
     'FORTY_FIVE_DEG',
     'SIXTY_DEG',
-    'GOLDEN_ANGLE'
+    'GOLDEN_ANGLE',
+    'arg'  # 0.5.1+
 ]
 
 __author__ = 'Zhang Jiarui'

@@ -17,7 +17,8 @@ __all__: list[str] = [
     "DEGREE",
     "MINUTE",
     "SECOND",
-    "_assert"
+    "_assert",
+    "arg"  # 0.5.1+
 ]
 
 DEGREE = '\u00b0'
@@ -445,7 +446,7 @@ def _assert(x: _T, klass: Any, err: type[Exception] = TypeError, msg: str = 'inv
     return x
 
 def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
-    """Be using for angle normalization"""
+    """Be used for angle normalization"""
     tts = x.total_seconds
     norms = tts % 1_296_000
     return Degree(second=norms) + origin
@@ -453,5 +454,9 @@ def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
 degree2radian: Callable[[Degree], int | float] = lambda x: _radians(x.total_seconds / 3600)
 radian2degree: Callable[[int | float], Degree] = lambda x: Degree(_degrees(x))
 arg: Callable[[int | float | complex], Degree] = lambda x: radian2degree(_phase(x))
+
+degree2radian.__doc__ = 'Convert angle x from a degree object to radians.'
+radian2degree.__doc__ = 'Convert angle x from radians to a degree object.'
+arg.__doc__ = 'Return argument(a Degree object), also known as the phase angle, of a complex.'
 
 del Any, overload, Iterable, Never, TypeVar, _T
