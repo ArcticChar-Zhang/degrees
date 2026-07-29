@@ -27,8 +27,8 @@ class TestProject(unittest.TestCase):
             degrees.Degree(0.0, 0.0, 0.0)
         with self.assertRaises(TypeError):
             degrees.Degree(-1.5, 1, 1)
-        self.assertEqual(repr(d1), 'Degree(1, 2, 3)')
-        self.assertEqual(repr(-d1), 'Degree(-1, 2, 3)')
+        self.assertEqual(repr(d1), 'degrees.Degree(1, 2, 3)')
+        self.assertEqual(repr(-d1), 'degrees.Degree(-1, 2, 3)')
         self.assertEqual(str(d1), '1°2′3″')
         self.assertEqual(str(d2), '-4°5′6″')
         self.assertEqual(str(d3), '-4°5′6″')
@@ -71,7 +71,9 @@ class TestProject(unittest.TestCase):
         self.assertEqual(round(d1), 1)
         self.assertEqual(round(d1, 1), degrees.Degree(1))
         self.assertEqual(round(d1, 2), degrees.Degree(1, 2))
-        self.assertEqual(round(d1, 3), degrees.Degree(1, 2, 3))
+        self.assertEqual(round(d2, 1), degrees.Degree(-4))
+        self.assertEqual(round(d2, 2), degrees.Degree(-4, 5))
+        self.assertEqual(round(d1, 3), d1)
         with self.assertRaises(ValueError):
             round(d1, 4)
         print(4)
@@ -134,7 +136,7 @@ class TestProject(unittest.TestCase):
         self.assertEqual(d2 * d1, degrees.Degree())
         with self.assertRaises(TypeError):
             self.assertEqual(d1 * d1, degrees.Degree())
-        d1 * 0.5
+        self.assertEqual(d1 * 0.5, degrees.Degree())
         with self.assertRaises(Exception):
             d1 * ''
         print(8)
@@ -162,6 +164,10 @@ class TestProject(unittest.TestCase):
     def test_hash(self):
         d = degrees.Degree(1, 2, 3)
         self.assertEqual(hash(d), hash((d.deg, d.min, d.sec, d.sign)))
+        s = {degrees.Degree(1, 2, 3), degrees.Degree(1, 2, 3)}
+        self.assertEqual(len(s), 1)
+        d = {degrees.Degree(1, 2, 3): 42}
+        self.assertEqual(d[degrees.Degree(1, 2, 3)], 42)
         print(10)
 
     def test_attr(self):
@@ -170,10 +176,11 @@ class TestProject(unittest.TestCase):
         with self.assertRaises(AttributeError):
             d1.c
         with self.assertRaises(AttributeError):
-            d1._Degree__set_
-
+            d1._d
         with self.assertRaises(AttributeError):
-            d1.c = 0
+            d1._tts = 0
+        with self.assertRaises(AttributeError):
+            d1.deg = 1
         print(11)
 
     def test_funcs(self):
@@ -181,6 +188,9 @@ class TestProject(unittest.TestCase):
         self.assertEqual(int(degrees.radian2degree(r)), int(degs(r)))
         d1 = degrees.Degree(361)
         self.assertEqual(degrees.normalize(d1), degrees.Degree(1))
+        self.assertEqual(degrees.normalize(d1, origin=90), 91)
+        self.assertEqual(degrees.normalize(degrees.Degree(-10)), 350)
+        self.assertEqual(degrees.normalize(degrees.Degree(800)), 80)
         print(12)
 
     def test_fromstr(self):
@@ -241,6 +251,10 @@ class TestProject(unittest.TestCase):
             degrees.Degree.from_unicode('1°3″')
         with self.assertRaises(ValueError):
             degrees.Degree.from_unicode('1″3°')
+        with self.assertRaises(ValueError):
+            degrees.Degree.from_str('1°3\'2″')
+        with self.assertRaises(ValueError):
+            degrees.Degree.from_unicode('1°3\'2″')
         print(17)
 
     def test_pickle(self):
@@ -248,6 +262,7 @@ class TestProject(unittest.TestCase):
         a = pickle.dumps(d)
         b = pickle.loads(a)
         self.assertEqual(d, b)
+        self.assertIsInstance(b, degrees.Degree)
         print(18)
 
     def test_complex(self):
@@ -260,6 +275,7 @@ class TestProject(unittest.TestCase):
     def test_duck_types(self):
         d1 = degrees.Degree(1, 2, 3)
         self.assertEqual(d1.as_integer_ratio(), (1241, 1200))
+        self.assertEqual((-d1).as_integer_ratio(), (-1241, 1200))
         self.assertEqual(degrees.Degree().as_integer_ratio(), (0, 1))
         self.assertFalse(d1.is_integer())
         print(20)
@@ -291,6 +307,7 @@ class TestProject(unittest.TestCase):
             (trig.acos, 0.5, 60),
             (trig.atan, 1.0, 45),
             (trig.acot, 1.0, 45),
+            (trig.acot, 0.0, 90),
             (trig.asec, 2.0, 60),
             (trig.acsc, 2.0, 30)
         ]
@@ -323,7 +340,17 @@ class TestProject(unittest.TestCase):
         self.assertEqual(degrees.FORTY_FIVE_DEG, 45)
         self.assertEqual(degrees.SIXTY_DEG, 60)
         self.assertEqual(degrees.GOLDEN_ANGLE, degrees.Degree(137.50776405003785))
-        degrees.set_north(90)
+        try:
+            with degrees.safe_set_north(90):
+                self.assertEqual(degrees.NORTH, 90)
+                raise RuntimeError
+        except RuntimeError:
+            ...
+        with self.assertRaises(TypeError):
+            degrees.set_north(1, warn='')
+        self.assertEqual(degrees.NORTH, 0)
+        with self.assertWarns(RuntimeWarning):
+            degrees.set_north(90)
         self.assertEqual(degrees.NORTH, 90)
         self.assertEqual(degrees.EAST, 180)
         self.assertEqual(degrees.SOUTH, 270)

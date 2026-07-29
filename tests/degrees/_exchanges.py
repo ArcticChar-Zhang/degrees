@@ -1,4 +1,5 @@
 """This submodule can be used for exchanging to/from gon/turn."""
+# noinspection PyProtectedMember
 from ._degrees import Degree as _Degree, _assert  # type: ignore
 from collections.abc import Callable
 

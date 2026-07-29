@@ -1,13 +1,13 @@
 """A python library for degree calculations and conversions."""
+from cmath import phase as _phase
+from collections.abc import Iterable, Callable
 from math import (radians as _radians,
                   degrees as _degrees,
                   cos as _cos,
                   sin as _sin,
                   gcd as _gcd,
                   isclose as _isclose)
-from cmath import phase as _phase
-from collections.abc import Iterable, Callable
-from typing import Any, SupportsIndex, overload, Never, TypeVar
+from typing import Any, overload, Never, TypeVar
 
 __all__: list[str] = [
     "Degree",
@@ -17,7 +17,6 @@ __all__: list[str] = [
     "DEGREE",
     "MINUTE",
     "SECOND",
-    "_assert",
     "arg"  # 0.5.1+
 ]
 
@@ -26,6 +25,8 @@ MINUTE = '\u2032'
 SECOND = '\u2033'
 
 class Degree:
+    """Degree main class.
+    NOTE: calculation results based on Degree object may be truncated."""
     __slots__ = ('_tts', '_s', '_d', '_m', '_si')
     __match_args__ = ('dms',)
 
@@ -104,7 +105,7 @@ class Degree:
 
     def __repr__(self) -> str:
         """return the repr form of the degree object"""
-        return "Degree" + str(self.dms)
+        return "degrees.Degree" + str(self.dms)
 
     def __pos__(self) -> 'Degree':
         """Return self unchanged"""
@@ -134,19 +135,25 @@ class Degree:
             return -self.deg
         return -self.deg - 1
 
-    def __round__(self, ndigits: int = 0, /) -> 'int | Degree':
+    @overload
+    def __round__(self, ndigits: int, /) -> 'Degree': ...
+    @overload
+    def __round__(self, ndigits: None = None, /) -> int: ...
+    def __round__(self, ndigits: int | None = None, /) -> 'Degree | int':
         """Return the nearest integer to its input if ndigits is omitted or None.
         Return self rounded to nearest degree if ndigits is 1.
         Return self rounded to nearest minute if ndigits is 2.
         Return self not changed if ndigits is 3.
         Otherwise, raise ValueError."""
+        tts = self.total_seconds
+
         match ndigits:
-            case 0:
-                return self.deg if self.min < 30 else self.deg + 1
+            case None:
+                return (abs(tts) + 1800) // 3600 * self.sign
             case 1:
-                return Degree(self.deg if self.min < 30 else self.deg + 1)
+                return Degree(round(self))
             case 2:
-                return Degree(self.deg, self.min if self.sec < 30 else self.min + 1)
+                return Degree(second=(abs(tts) + 30) // 60 * 60 * self.sign)
             case 3:
                 return self
             case _:
@@ -285,7 +292,7 @@ class Degree:
         object.__setattr__(obj, '_tts', tts)
         return obj
 
-    def __reduce_ex__(self, _: SupportsIndex) -> tuple[Callable[[int], object], tuple[int]]:  # type: ignore
+    def __reduce__(self) -> tuple[Callable[[int], object], tuple[int]]:
         return (
             self._construct,
             (self.total_seconds,)
@@ -438,7 +445,7 @@ def _t_from_str(string: str, signs: tuple[str, str, str], isuni: str) -> 'Degree
 
 _T = TypeVar('_T')
 
-def _assert(x: _T, klass: Any, err: type[Exception] = TypeError, msg: str = 'invalid type') -> _T:
+def _assert(x: _T, klass: Any, err: type[Exception] = TypeError, msg: str = 'invalid type') -> _T:  # type: ignore
     """Inner API. Do NOT use it."""
     if not isinstance(x, klass):
         # noinspection PyCallingNonCallable
@@ -446,7 +453,7 @@ def _assert(x: _T, klass: Any, err: type[Exception] = TypeError, msg: str = 'inv
     return x
 
 def normalize(x: Degree, /, origin: int | float | Degree = 0) -> Degree:
-    """Be used for angle normalization"""
+    """Normalize angle x to range [origin, origin + 360)."""
     tts = x.total_seconds
     norms = tts % 1_296_000
     return Degree(second=norms) + origin
@@ -457,6 +464,9 @@ arg: Callable[[int | float | complex], Degree] = lambda x: radian2degree(_phase(
 
 degree2radian.__doc__ = 'Convert angle x from a degree object to radians.'
 radian2degree.__doc__ = 'Convert angle x from radians to a degree object.'
-arg.__doc__ = 'Return argument(a Degree object), also known as the phase angle, of a complex.'
+arg.__doc__ = 'Return argument(a Degree object), also known as the phase angle, of a complex number.'
+
+to_rad: Callable[[Degree], int | float] = degree2radian
+from_rad: Callable[[int | float], Degree] = radian2degree
 
 del Any, overload, Iterable, Never, TypeVar, _T
