@@ -1,3 +1,4 @@
+"""Some constants are defined in this submudule."""
 from ._degrees import Degree as _Deg
 
 __all__ = ['RIGHT_ANGLE', 'STRAIGHT_ANGLE', 'FULL_ANGLE', 'ZERO_ANGLE',

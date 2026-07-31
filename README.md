@@ -1,4 +1,4 @@
-# degrees V0.5.1b1
+# degrees V0.5.1
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -7,9 +7,11 @@
 * [Class](#class)
   * [Degree](#class-degreesdegreenumberclass-degreesdegreedegree_objclass-degreesdegreedegree0-minute0-second0)
 * [Functions](#functions)
-  * [degree2radian](#degreesdegree2radianx-degree-)
-  * [radian2degree](#degreesradian2degreex-int--float-)
+  * [Functions for converting](#functions-for-converting)
   * [normalize](#degreesnormalizex-degree--origin-int--float--degree--0)
+  * [arg](#degreesargx-complex)
+  * [set_north](#degreesset_northn-degree--int--float--warn-bool--true)
+  * [safe_set_north](#contextmanager-degreessafe_set_northn-degree--int--float-)
 * [Constants](#constants)
   * [DEGREE<br>MINUTE<br>SECOND](#degreesdegreedegreesminutedegreessecond)
   * [\_\_author\_\_](#degrees__author__)
@@ -35,7 +37,7 @@
 If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/project/degrees/0.3.0.post1/).
 # Importing
 ### Just type `import degrees`.
-# Class
+//# Class
 - ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
    Degree main class.
    > [!NOTE]
