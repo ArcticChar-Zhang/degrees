@@ -69,5 +69,3 @@ media/
 *.exe
 *.dll
 *.bin
-
-/README-PyPI.md

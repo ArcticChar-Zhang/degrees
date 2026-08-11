@@ -20,6 +20,7 @@ acos: Callable[[int | float], Degree] = lambda x: _r2d(_math.acos(x))
 atan: Callable[[int | float], Degree] = lambda x: _r2d(_math.atan(x))
 acot: Callable[[int | float], Degree] = \
     lambda x: _r2d(_math.atan(1 / x)) if _assert(x, (int, float)) else Degree(90)
+# first assert if the type of x is valid, then return Degree(90) if x == 0 else calculate normally.
 asec: Callable[[int | float], Degree] = lambda x: _r2d(_math.acos(1 / x))
 acsc: Callable[[int | float], Degree] = lambda x: _r2d(_math.asin(1 / x))
 
