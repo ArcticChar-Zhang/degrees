@@ -163,7 +163,10 @@ class TestProject(unittest.TestCase):
 
     def test_hash(self):
         d = degrees.Degree(1, 2, 3)
-        self.assertEqual(hash(d), hash((d.deg, d.min, d.sec, d.sign)))
+        self.assertEqual(hash(d), hash(float(d)))
+        one = degrees.Degree(1)
+        self.assertEqual({1, one}, {1})
+        self.assertEqual({one, 1}, {one})
         s = {degrees.Degree(1, 2, 3), degrees.Degree(1, 2, 3)}
         self.assertEqual(len(s), 1)
         d = {degrees.Degree(1, 2, 3): 42}
@@ -376,3 +379,15 @@ class TestProject(unittest.TestCase):
                 x = 1
         self.assertEqual(x, 1)
         print(24)
+
+    def test_normalized_class(self):
+        d1 = degrees.Degree(1, 2, 3)
+        d2 = degrees.NormalizedDegree(d1)
+        self.assertEqual(d1, d2)
+        d3 = degrees.NormalizedDegree.from_str('1°2\'3"')
+        self.assertEqual(d1, d3)
+        d4 = degrees.NormalizedDegree.from_unicode('1°2′3″')
+        self.assertEqual(d1, d4)
+        d5 = degrees.NormalizedDegree.from_iter((1, 2, 3))
+        self.assertEqual(d1, d5)
+        print(25)
