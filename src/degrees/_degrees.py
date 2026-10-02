@@ -17,7 +17,8 @@ __all__: list[str] = [
     "DEGREE",
     "MINUTE",
     "SECOND",
-    "arg"  # 0.5.1+
+    "arg",  # 0.5.1+
+    "NormalizedDegree"  # 0.5.2+
 ]
 
 DEGREE = '\u00b0'
@@ -78,7 +79,7 @@ class Degree:
 
     def __abs__(self) -> 'Degree':
         """Return the absolute value of the degree object"""
-        return Degree(second=self.total_seconds)
+        return self.__class__(second=self.total_seconds)
 
     def __str__(self) -> str:
         r: str = "" if self.total_seconds > 0 else "-"
@@ -113,7 +114,7 @@ class Degree:
 
     def __neg__(self) -> 'Degree':
         """Return self negated"""
-        return Degree(second=-self.total_seconds)
+        return self.__class__(second=-self.total_seconds)
 
     def __ceil__(self) -> int:
         """Return the least Integral >= x"""
@@ -151,9 +152,9 @@ class Degree:
             case None:
                 return (abs(tts) + 1800) // 3600 * self.sign
             case 1:
-                return Degree(round(self))
+                return self.__class__(round(self))
             case 2:
-                return Degree(second=(abs(tts) + 30) // 60 * 60 * self.sign)
+                return self.__class__(second=(abs(tts) + 30) // 60 * 60 * self.sign)
             case 3:
                 return self
             case _:
@@ -212,7 +213,7 @@ class Degree:
         """Return the sum of self and other"""
         oth: Degree = Degree(other)
         ttsec: int = self.total_seconds + oth.total_seconds
-        return Degree(second=ttsec)
+        return self.__class__(second=ttsec)
 
     def __radd__(self, other: int | float | 'Degree') -> 'Degree':
         """Return the sum of other and self"""
@@ -230,7 +231,7 @@ class Degree:
         """Return the product of self and other"""
         if isinstance(other, (int, float)):  # type: ignore
             tts = int(self.total_seconds * other)
-            return Degree(second=tts)
+            return self.__class__(second=tts)
         raise TypeError("invalid type")
 
     def __rmul__(self, other: int | float) -> 'Degree':
@@ -247,7 +248,7 @@ class Degree:
             raise ZeroDivisionError("division by zero")
         if isinstance(other, (int, float)):
             tts = int(self.total_seconds // other)
-            return Degree(second=tts)  # type: ignore
+            return self.__class__(second=tts)  # type: ignore
         sts = self.total_seconds
         ots = other.total_seconds
         return sts / ots
@@ -262,7 +263,7 @@ class Degree:
             raise ZeroDivisionError("division by zero")
         if isinstance(other, (int, float)):
             res = int(self.deg * self.sign // other)
-            return Degree(res)
+            return self.__class__(res)
         sts = self.total_seconds
         ots = other.total_seconds
         return sts // ots
@@ -274,11 +275,11 @@ class Degree:
         sts = self.total_seconds
         ots = other.total_seconds
         # noinspection PyTypeChecker
-        return Degree(second=sts % ots)  # type: ignore
+        return self.__class__(second=sts % ots)  # type: ignore
 
     def __hash__(self) -> int:
         """Return the hash value of the degree object"""
-        return hash((self.deg, self.min, self.sec, self.sign))
+        return hash((int if self.is_integer() else float)(self))
 
     def __setattr__(self, key: str, value: Any) -> Never:
         """You should never use this method!!!"""
@@ -339,18 +340,18 @@ class Degree:
         assert isinstance(_ := getattr(self, '_tts'), int)
         return _
 
-    @staticmethod
-    def from_str(string: str) -> 'Degree':
+    @classmethod
+    def from_str(cls, string: str) -> 'Degree':
         """Create a degree from a string"""
         return _t_from_str(string, (DEGREE, "'", '"'), '')
 
-    @staticmethod
-    def from_unicode(string: str) -> 'Degree':
+    @classmethod
+    def from_unicode(cls, string: str) -> 'Degree':
         """Create a degree from a Unicode string"""
         return _t_from_str(string, (DEGREE, MINUTE, SECOND), 'Unicode ')
 
-    @staticmethod
-    def from_iter(iterable: Iterable[int]) -> 'Degree':
+    @classmethod
+    def from_iter(cls, iterable: Iterable[int]) -> 'Degree':
         """Return a degree object from an iterable
         Accept forms:
         1) (deg, min, sec)
@@ -403,6 +404,42 @@ class Degree:
     def is_integer(self) -> bool:
         """Return True if the degree object is an integer, else False"""
         return self.min == 0 and self.sec == 0
+
+class NormalizedDegree(Degree):
+    """A degree class that is always normalized to [0, 360)."""
+
+    @overload
+    def __init__(self, degree: int = 0, minute: int = 0, second: int = 0) -> None: ...
+    @overload
+    def __init__(self, degree: float) -> None: ...
+    @overload
+    def __init__(self, degree: 'Degree') -> None: ...
+    def __init__(self, degree: int | float | 'Degree' = 0,
+                 minute: int = 0,
+                 second: int = 0) -> None:
+        super().__init__(
+            normalize(
+                Degree(degree, minute, second) # pyright: ignore[reportArgumentType]
+            )
+        )
+
+    @classmethod
+    def from_str(cls, string: str) -> 'NormalizedDegree':
+        return cls(
+            Degree.from_str(string)
+        )
+
+    @classmethod
+    def from_unicode(cls, string: str) -> 'NormalizedDegree':
+        return cls(
+            Degree.from_unicode(string)
+        )
+
+    @classmethod
+    def from_iter(cls, iterable: Iterable[int]) -> 'NormalizedDegree':
+        return cls(
+            Degree.from_iter(iterable)
+        )
 
 def _t_from_str(string: str, signs: tuple[str, str, str], isuni: str) -> 'Degree':
     if string.isdecimal():

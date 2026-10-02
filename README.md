@@ -1,4 +1,4 @@
-# degrees V0.6.0rc1
+# degrees V0.6.0
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)
@@ -6,6 +6,7 @@
 * [Importing](#importing)
 * [Class](#class)
   * [Degree](#class-degreesdegreenumberclass-degreesdegreedegree_objclass-degreesdegreedegree0-minute0-second0)
+  * [NormalizedDegree](#class-degreesnormalizeddegreenumberclass-degreesnormalizeddegreedegree_objclass-degreesnormalizeddegreedegree0-minute0-second0)
 * [Functions](#functions)
   * [Functions for converting](#functions-for-converting)
   * [normalize](#degreesnormalizex-degree--origin-int--float--degree--0)
@@ -37,7 +38,7 @@
 If you use `python 3.8` or `3.9`, please read [the docs here](https://pypi.org/project/degrees/0.3.0.post1/).
 # Importing
 ### Just type `import degrees`.
-//# Class
+# Class
 - ## _class degrees_.Degree(number)<br>_class degrees_.Degree(degree_obj)<br>_class degrees_.Degree(degree=0, minute=0, second=0)
    Degree main class.
    > [!NOTE]
@@ -91,7 +92,8 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
    > &#9;Return self rounded to nearest minute if `ndigits` is 2.<br>
    > &#9;Return self not changed if `ndigits` is 3.<br>
    > &#9;Otherwise, raise ValueError.<br>
-   > (`ndigits`/`b` is the second argument.)
+   > (`ndigits`/`b` is the second argument.)<br><br>
+   > If the operations' argument type can be `Degree`, it can also be `NormalizedDegree`. The result depends on the first argument's type.
 
    > [!TIP]
    > **Added in version 0.1.7:** Implemented the `math.trunc` function on the Degree objects.
@@ -126,16 +128,17 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
 ```
 
    - ### comparisons:
-     | expressions | `type(a)` |        `type(b)`         |
-     |:-----------:|:---------:|:------------------------:|
-     |  `a >= b`   | `Degree`  | `Degree \| int \| float` |
-     |   `a > b`   | `Degree`  | `Degree \| int \| float` |
-     |  `a == b`   | `Degree`  |          `Any`           |
-     |  `a <= b`   | `Degree`  | `Degree \| int \| float` |
-     |   `a < b`   | `Degree`  | `Degree \| int \| float` |
-     |  `a != b`   | `Degree`  |          `Any`           |
+      | expressions | `type(a)` |        `type(b)`         |
+      |:-----------:|:---------:|:------------------------:|
+      |  `a >= b`   | `Degree`  | `Degree \| int \| float` |
+      |   `a > b`   | `Degree`  | `Degree \| int \| float` |
+      |  `a == b`   | `Degree`  |          `Any`           |
+      |  `a <= b`   | `Degree`  | `Degree \| int \| float` |
+      |   `a < b`   | `Degree`  | `Degree \| int \| float` |
+      |  `a != b`   | `Degree`  |          `Any`           |
     
-     In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
+      In the table above, the return value is `bool`, `type(a)` and `type(b)` can be swapped.
+      Note the comparisons also works on `NormalizedDegree`.
 
    - ### _property_ deg
      The degree of a degree object(without sign).
@@ -149,14 +152,17 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
      A tuple of `(degree, minute, second)`.
    - ### _property_ total_seconds
      The total seconds of a degree object.
-   - ### _staticmethod_ from_iter(iterable)
+   - ### _classmethod_ from_iter(iterable)
      Return a degree object from an iterable.
-   - ### _staticmethod_ from_str(string)
+   - ### _classmethod_ from_str(string)
      Return a degree object from a string. The **dms** characters should be **`°`, `'` and `"`**.
-   - ### _staticmethod_ from_unicode(string)
+   - ### _classmethod_ from_unicode(string)
      Similar to `from_str`, but the **dms** characters should be **`°`, `′` and `″`**.
    > [!TIP]
    > **Added in version 0.1.10.**
+
+   > [!WARNING]
+   > **Changed in version 0.6.0:** The `from_str`, `from_unicode` and `from_iter` methods are now class methods, but in the previous version, they are static methods. You had better be careful if you use these methods.
    - ### as_integer_ratio()
      Return a tuple of `(numerator, denominator)` which is the integer ratio of the degree object.
      For example, `Degree(1, 30).as_integer_ratio()` returns `(3, 2)`.
@@ -172,8 +178,13 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    > [!TIP]
    > **Added in version 0.2.1.**
    
+- ## _class degrees_.NormalizedDegree(number)<br>_class degrees_.NormalizedDegree(degree_obj)<br>_class degrees_.NormalizedDegree(degree=0, minute=0, second=0)
+   Similar to `Degree`, but the value is normalized to `[0, 360)`.
+   [!WARNING]
+   Sorry that the `set_north` function, the `safe_set_north` context manager, functions in `trigonometry` and the conversion functions are not supported in `NormalizedDegree`. You can use `Degree` instead now. It will be supported in the future.
+
    > [!NOTE]
-   > The attributes of Degree are read-only.
+   > The attributes of `Degree` and `NormalizedDegree` are read-only.
 # Functions
 ### Functions for converting
    |   functions   |   input type   |  return type   |
@@ -245,10 +256,9 @@ functions. Here is the input types and return types of these functions:<br>
      (`forward_trigonometric_function` and `inverse_trigonometric_function` are referred to the functions in the table,
      and these two functions do not exist. Do not use them.)
 # Changelog
-   1. Added `Degree.__round__`.
-   2. Added `arg`.
-   3. Added `safe_set_north` and warn when `set_north` is called.
-   4. Changed `Degree.__reduce_ex__` to `Degree.__reduce__`.
+   1. Added `NormalizedDegree` class.
+   2. Slightly changed the `__hash__` method of `Degree` class to be compatible with the `int` and `float` types.
+   3. Slightly changed the methods for calculations of `Degree` class to be compatible with the `NormalizedDegree` types.
 # Older versions
 > Looking for src and a README older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the

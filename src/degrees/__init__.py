@@ -41,7 +41,8 @@ __all__: list[str] = [
     'to_gon',
     'to_turn',
     'from_gon',
-    'from_turn'
+    'from_turn',
+    'NormalizedDegree'  # 0.6.0+
 ]
 
 __author__ = 'Zhang Jiarui'
