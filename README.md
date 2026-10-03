@@ -180,8 +180,9 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    
 - ## _class degrees_.NormalizedDegree(number)<br>_class degrees_.NormalizedDegree(degree_obj)<br>_class degrees_.NormalizedDegree(degree=0, minute=0, second=0)
    Similar to `Degree`, but the value is normalized to `[0, 360)`.
-   [!WARNING]
-   Sorry that the `set_north` function, the `safe_set_north` context manager, functions in `trigonometry` and the conversion functions are not supported in `NormalizedDegree`. You can use `Degree` instead now. It will be supported in the future.
+
+   > [!NOTE]
+   > All the functions support class `Degree` supports `NormalizedDegree` for its argument because `Degree` is the subclass of `NormalizedDegree`.
 
    > [!NOTE]
    > The attributes of `Degree` and `NormalizedDegree` are read-only.
