@@ -4,6 +4,7 @@ from ._version import *
 from . import trigonometry
 from ._consts import *
 from ._exchanges import *
+from ._judgements import *
 from warnings import warn as _warn
 from contextlib import contextmanager as _con
 from collections.abc import Generator
@@ -42,7 +43,8 @@ __all__: list[str] = [
     'to_turn',
     'from_gon',
     'from_turn',
-    'NormalizedDegree'  # 0.6.0+
+    'NormalizedDegree',  # 0.6.0+
+    'is_'  # 0.6.1+
 ]
 
 __author__ = 'Zhang Jiarui'

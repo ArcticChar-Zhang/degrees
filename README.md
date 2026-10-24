@@ -117,7 +117,7 @@ print(degrees.Degree(2, -4))  # ValueError: if degree is not 0, minute and secon
    `theta=degree2radian(degree_obj)`.
 
    > [!WARNING]
-   > **Changed in version 0.4.3:** `float(degree_obj)` now returns a precise value, but in the previous version, it returns a rounded value(eqivalent to `round(float(degree_obj), 3)` now).
+   > **Changed in version 0.4.3:** `float(degree_obj)` now returns a precise value, but in the previous version, it returns a rounded value(equivalent to `round(float(degree_obj), 3)` now).
 
 For example:
 ```python
@@ -211,6 +211,24 @@ print(a.to_complex(2 ** 0.5))  # about (1+1j)
    - The context manager version of function `set_north`.
    > [!TIP]
    > **Added in version 0.5.1.**
+## is_.acute<br>is_.right<br>is_.obtuse<br>is_.straight<br>is_.major<br>is_.minor<br>is_.zero<br>is_.round
+   - All the functions above receive a `Degree` or `NormalizedDegree` instance as an argument
+   except for `is_.round`.
+   They are used to judge if the value of some `Degree` objects are in a specified range.
+   The rule is in the table below.
+
+   |     function      |      range      |
+   |:-----------------:|:---------------:|
+   |  `is_.acute(x)`   |  `0 < x < 90`   |
+   |  `is_.right(x)`   |    `x == 90`    |
+   |  `is_.obtuse(x)`  | `90 < x < 180`  |
+   | `is_.straight(x)` |   `x == 180`    |
+   |  `is_.major(x)`   | `180 < x < 360` |
+   |  `is_.minor(x)`   |  `0 < x < 180`  |
+   |  `is_.round(x)`   |   `x == 360`    |
+   |   `is_.zero(x)`   |    `x == 0`     |
+   > [!TIP]
+   > Added in version 0.6.1.
 # Version
 ## version_info
    - The version of this package, like
@@ -261,10 +279,10 @@ functions. Here is the input types and return types of these functions:<br>
    2. Slightly changed the `__hash__` method of `Degree` class to be compatible with the `int` and `float` types.
    3. Slightly changed the methods for calculations of `Degree` class to be compatible with the `NormalizedDegree` types.
 # Older versions
-> Looking for src and a README older version?<br>
+> Looking for the source code and a README for an older version?<br>
 > Click [here](https://github.com/ArcticChar-Zhang/degrees/commits/main/) for V0.4.1+(include V0.4.1), next click the
 > version you want, and then click "📄Browse files".<br>
 > And [here](https://pypi.org/project/degrees/#history) for versions below V0.4.1.
 
 > ### Write in the end
-> If you found the bug in the code, you can email me at `snake830@vip.163.com`. I am happy to receive the advice!
+> If you found the bug in the code, you can email me at `snake830@vip.163.com`. I will be glad to receive the advice!
