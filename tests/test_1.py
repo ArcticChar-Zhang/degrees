@@ -391,3 +391,8 @@ class TestProject(unittest.TestCase):
         d5 = degrees.NormalizedDegree.from_iter((1, 2, 3))
         self.assertEqual(d1, d5)
         print(25)
+
+    def test_judgements(self):
+        d1 = degrees.Degree()
+        self.assertTrue(degrees.is_.zero(d1))
+        print(26)
