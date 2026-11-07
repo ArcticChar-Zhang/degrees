@@ -1,3 +1,4 @@
+"""Judgements for types of Degree instances."""
 # noinspection PyProtectedMember
 from ._degrees import Degree as _D, NormalizedDegree as _ND, _assert  # type: ignore
 from collections.abc import Callable

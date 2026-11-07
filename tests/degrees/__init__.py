@@ -44,7 +44,11 @@ __all__: list[str] = [
     'from_gon',
     'from_turn',
     'NormalizedDegree',  # 0.6.0+
-    'is_'  # 0.6.1+
+    'is_',  # 0.6.1+
+    'north',  # 0.6.3+
+    'east',  # 0.6.3+
+    'south',  # 0.6.3+
+    'west'  # 0.6.3+
 ]
 
 __author__ = 'Zhang Jiarui'
@@ -52,35 +56,34 @@ __author__ = 'Zhang Jiarui'
 
 def set_north(n: int | float | Degree, /, warn: bool = True) -> None:
     """Set north to n, east to (n + 90), south to (n + 180), west to (n + 270).
-    Never Use \"NORTH=Degree(xxx)\".
+    Never Use \"north=Degree(xxx)\".
     WARNING: Set global cardinal directions. NOT thread-safe. For single-threaded use only."""
     if warn is not True and warn is not False:
         raise TypeError('argument "warn" must be True or False')
     if warn:
         _warn('Set global cardinal directions. NOT thread-safe. For single-threaded use only.',
               RuntimeWarning)
-    # noinspection PyGlobalUndefined
-    global NORTH, EAST, SOUTH, WEST
-    NORTH = Degree(n)  # type: ignore
-    EAST = normalize(NORTH + 90)  # type: ignore
-    SOUTH = normalize(NORTH + 180)  # type: ignore
-    WEST = normalize(NORTH + 270)  # type: ignore
+    global north, east, south, west
+    north = Degree(n)
+    east = normalize(north + 90)
+    south = normalize(north + 180)
+    west = normalize(north + 270)
 
 @_con
 def safe_set_north(n: int | float | Degree, /) -> Generator[None, Any, None]:
     """Set north to n, east to (n + 90), south to (n + 180), west to (n + 270).
-    Never Use \"NORTH=Degree(xxx)\".
+    Never Use \"north=Degree(xxx)\".
     This function is thread-safe and guarantees state restoration via context manager."""
     # noinspection PyGlobalUndefined
-    global NORTH, EAST, SOUTH, WEST
-    n2, e, s, w = NORTH, EAST, SOUTH, WEST
-    NORTH = Degree(n)  # type: ignore
-    EAST = normalize(NORTH + 90)  # type: ignore
-    SOUTH = normalize(NORTH + 180)  # type: ignore
-    WEST = normalize(NORTH + 270)  # type: ignore
+    global north, east, south, west
+    north = Degree(n)
+    east = normalize(north + 90)
+    south = normalize(north + 180)
+    west = normalize(north + 270)
     try:
         yield
     finally:
-        NORTH, EAST, SOUTH, WEST = n2, e, s, w  # type: ignore
+        north, east, south, west = \
+        NORTH, EAST, SOUTH, WEST
 
 del _con, Generator, Any

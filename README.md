@@ -1,4 +1,4 @@
-# degrees V0.6.2
+# degrees V0.6.3b1(Haven't Changed)
 # Back to PyPI: click [here](https://pypi.org/project/degrees/)
 # Contents
 * [Introduction](#introduction)

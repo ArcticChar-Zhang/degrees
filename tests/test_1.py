@@ -345,19 +345,22 @@ class TestProject(unittest.TestCase):
         self.assertEqual(degrees.GOLDEN_ANGLE, degrees.Degree(137.50776405003785))
         try:
             with degrees.safe_set_north(90):
-                self.assertEqual(degrees.NORTH, 90)
+                self.assertEqual(degrees.north, 90)
                 raise RuntimeError
         except RuntimeError:
             ...
         with self.assertRaises(TypeError):
             degrees.set_north(1, warn='')
-        self.assertEqual(degrees.NORTH, 0)
+        self.assertEqual(degrees.north, 0)
         with self.assertWarns(RuntimeWarning):
             degrees.set_north(90)
-        self.assertEqual(degrees.NORTH, 90)
-        self.assertEqual(degrees.EAST, 180)
-        self.assertEqual(degrees.SOUTH, 270)
-        self.assertEqual(degrees.WEST, 0)
+        self.assertEqual(degrees.north, 90)
+        self.assertEqual(degrees.east, 180)
+        self.assertEqual(degrees.south, 270)
+        self.assertEqual(degrees.west, 0)
+        self.assertEqual(degrees.NORTH, 0)
+        degrees.set_north(0, warn=False)
+        self.assertEqual(degrees.north, 0)
         print(22)
     
     def test_exch(self):
